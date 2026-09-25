@@ -1,5 +1,5 @@
 // ============================================================================
-// PANINIAN SAMASA ENGINE - PROTOTYPE v0.1 (100% Pure DOM - No HTML Strings)
+// PANINIAN SAMASA ENGINE - PROTOTYPE v0.1 (100% Pure DOM + Auto JSON Unwrapper)
 // ============================================================================
 
 var lexiconData = [];
@@ -25,7 +25,6 @@ var SUP_PRATYAYA = {
   7: ["ङि", "ओस्", "सुप्"]
 };
 
-// DOM Element ರಚಿಸಲು ಸಹಾಯಕ ಫಂಕ್ಷನ್
 function el(tag, className, text) {
   var node = document.createElement(tag);
   if (className) node.className = className;
@@ -33,7 +32,21 @@ function el(tag, className, text) {
   return node;
 }
 
-// 1. CSS ಮತ್ತು ವೆಬ್‌ಪೇಜ್ UI ಅನ್ನು ಜಾವಾಸ್ಕ್ರಿಪ್ಟ್ ಮೂಲಕವೇ ನಿರ್ಮಿಸುವುದು
+// JSON ಒಳಗಿರುವ Array ಅನ್ನು ತಾನಾಗಿಯೇ ಹುಡುಕಿ ತೆಗೆಯುವ ಫಂಕ್ಷನ್
+function extractArray(rawJson) {
+  if (Array.isArray(rawJson)) return rawJson;
+  if (rawJson && typeof rawJson === "object") {
+    var keys = Object.keys(rawJson);
+    for (var i = 0; i < keys.length; i++) {
+      if (Array.isArray(rawJson[keys[i]])) {
+        return rawJson[keys[i]];
+      }
+    }
+    return Object.values(rawJson);
+  }
+  return [];
+}
+
 function buildAppInterface() {
   document.title = "पाणिनीय-समास-यन्त्रम् | Samasa Engine Prototype v0.1";
 
@@ -105,7 +118,6 @@ function buildAppInterface() {
   document.body.innerHTML = "";
   var container = el("div", "container");
 
-  // Header
   var header = el("div", "app-header");
   header.appendChild(el("h1", "", "पाणिनीय-समास-यन्त्रम् (Prototype v0.1)"));
   header.appendChild(el("p", "", "ದ್ವಿತೀಯಾ, ತೃತೀಯಾ ಮತ್ತು ಚತುರ್ಥೀ ತತ್ಪುರುಷ ಸಮಾಸಗಳ ಪರೀಕ್ಷಾ ಎಂಜಿನ್"));
@@ -114,7 +126,6 @@ function buildAppInterface() {
   header.appendChild(statusBadge);
   container.appendChild(header);
 
-  // Input Card
   var inputCard = el("div", "card");
   inputCard.appendChild(el("h2", "", "१. ಸಮಾಸ ನಿರ್ಮಾಣ ಮತ್ತು ಪರೀಕ್ಷೆ (Samasa Tester)"));
   var grid = el("div", "input-grid");
@@ -147,7 +158,6 @@ function buildAppInterface() {
   inputCard.appendChild(grid);
   container.appendChild(inputCard);
 
-  // Quick Test Suite Card
   var testCard = el("div", "card");
   testCard.appendChild(el("h2", "", "२. ನಾಲ್ಕು ಬಗೆಯ ಪರೀಕ್ಷಾ ಉದಾಹರಣೆಗಳು (1-Click Test Suite)"));
   var testGroups = el("div", "test-groups");
@@ -220,7 +230,6 @@ function buildAppInterface() {
   document.body.appendChild(modalOverlay);
 }
 
-// 2. ಡೇಟಾಬೇಸ್ ಲೋಡ್ ಮಾಡುವುದು
 async function initEngine() {
   buildAppInterface();
   var statusEl = document.getElementById("engineStatus");
@@ -239,8 +248,15 @@ async function initEngine() {
       throw new Error("JSON ಫೈಲ್‌ಗಳು ಸಿಗುತ್ತಿಲ್ಲ.");
     }
 
-    lexiconData = await lexRes.json();
-    rulesData = await rulesRes.json();
+    var rawLex = await lexRes.json();
+    var rawRules = await rulesRes.json();
+
+    lexiconData = extractArray(rawLex);
+    rulesData = extractArray(rawRules);
+
+    if (!rulesData || rulesData.length === 0) {
+      loadFallbackData();
+    }
 
     buildFormIndex();
     statusEl.textContent = "✅ ಎಂಜಿನ್ ಸಿದ್ಧವಾಗಿದೆ! (" + lexiconData.length.toLocaleString() + " ಶಬ್ದಗಳು ಹಾಗೂ " + rulesData.length + " ಸೂತ್ರಗಳು ಲೋಡ್ ಆಗಿವೆ)";
@@ -256,8 +272,8 @@ async function initEngine() {
 function buildFormIndex() {
   formIndex.clear();
   lexiconData.forEach(function(entry) {
-    if (!entry.forms || !entry.word) return;
-    var formsArr = entry.forms.split(";").slice(0, 21);
+    if (!entry || !entry.forms || !entry.word) return;
+    var formsArr = String(entry.forms).split(";").slice(0, 21);
     
     formsArr.forEach(function(rawForm, idx) {
       var vibhakti = Math.floor(idx / 3) + 1;
@@ -270,12 +286,12 @@ function buildFormIndex() {
           formIndex.set(cleanForm, []);
         }
         formIndex.get(cleanForm).push({
-          pratipadika: entry.word.trim(),
+          pratipadika: String(entry.word).trim(),
           linga: entry.linga || "",
           artha: entry.artha || "",
           vibhakti: vibhakti,
           vachana: vachana,
-          prathamaEkavachana: formsArr[0] ? formsArr[0].trim() : entry.word.trim()
+          prathamaEkavachana: formsArr[0] ? formsArr[0].trim() : String(entry.word).trim()
         });
       });
     });
@@ -555,7 +571,6 @@ function getRejectionReason(rule, pAna, uAna) {
   return "ಉತ್ತರಪದ '" + uAna.pratipadika + "' ಈ ಸೂತ್ರದ ಷರತ್ತಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ.";
 }
 
-// Pure DOM Modal Builder
 function openSemanticModal(matchDetails) {
   var rule = matchDetails.rule;
   var pAna = matchDetails.pAna;
@@ -644,7 +659,6 @@ function resolveSemanticChoice(isApproved, customSutra, customNote) {
   pendingEvaluation = null;
 }
 
-// Pure DOM Output Builder
 function renderFinalOutput(data) {
   var resBox = document.getElementById("resultSection");
   resBox.innerHTML = "";
@@ -706,7 +720,6 @@ function renderFinalOutput(data) {
     resBox.appendChild(failCard);
   }
 
-  // Verification Log Table
   var logBox = el("div", "audit-log");
   logBox.appendChild(el("h4", "", "🔍 ಎಂಜಿನ್ ಪರೀಕ್ಷಿಸಿದ ಸೂತ್ರಗಳ ವಿವರ (Rule Verification Log):"));
   var tbl = el("table", "log-table");
