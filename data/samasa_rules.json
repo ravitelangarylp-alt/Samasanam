@@ -1,0 +1,111 @@
+[
+  {
+    "rule_id": "2.1.24",
+    "sutra": "द्वितीया श्रितातीतपतितगतात्यस्तप्राप्तापन्नैः",
+    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "purva": { "vibhakti": 2 },
+    "uttara": { 
+      "match_type": "exact_pratipadika", 
+      "words": ["श्रित", "अतीत", "पतित", "गत", "अत्यस्त", "प्राप्त", "आपन्न"] 
+    },
+    "semantic_check": { "required": false }
+  },
+  {
+    "rule_id": "2.1.25",
+    "sutra": "स्वयं क्तेन",
+    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "purva": { "exact_word": "स्वयम्", "type": "avyaya" },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": { "required": false }
+  },
+  {
+    "rule_id": "2.1.26",
+    "sutra": "खट्वा क्षेपे",
+    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "purva": { "vibhakti": 2, "pratipadika": "खट्वा" },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kshepaModal",
+      "question_sa": "किम् अत्र क्षेपः (निन्दा) विवक्षितः?",
+      "question_kn": "ಇಲ್ಲಿ ನಿಂದೆ ಅಥವಾ ಅಪಹಾಸ್ಯದ ಉದ್ದೇಶವಿದೆಯೇ (ವಿವಕ್ಷೆ)?",
+      "if_false_msg": "ನಿಂದೆಯ ಉದ್ದೇಶವಿಲ್ಲದಿದ್ದರೆ ಸಮಾಸವಾಗುವುದಿಲ್ಲ. 'खट्वाम् आरूढः' ಎಂದೇ ಪ್ರತ್ಯೇಕವಾಗಿ ಉಳಿಯುತ್ತದೆ."
+    }
+  },
+  {
+    "rule_id": "2.1.27",
+    "sutra": "सामि क्तेन",
+    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "purva": { "exact_word": "सामि", "type": "avyaya" },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": { "required": false }
+  },
+  {
+    "rule_id": "2.1.28",
+    "sutra": "कालाः",
+    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "purva": { "vibhakti": 2, "category": "kalavachaka" },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": { "required": false }
+  },
+  {
+    "rule_id": "2.1.29",
+    "sutra": "अत्यन्तसंयोगे च",
+    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "purva": { "vibhakti": 2, "category": "kalavachaka" },
+    "uttara": { "match_type": "any" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "atyantaModal",
+      "question_sa": "अत्यन्तसंयोगः विवक्षितः?",
+      "question_kn": "ಕಾಲದ ನಿರಂತರ ಸಂಬಂಧ (ಅತ್ಯಂತಸಂಯೋಗ) ವಿವಕ್ಷಿತವೇ?",
+      "if_false_msg": "ಅತ್ಯಂತಸಂಯೋಗ ವಿವಕ್ಷಿತವಲ್ಲದಿದ್ದರೆ ಈ ಸೂತ್ರದಿಂದ ಸಮಾಸವಾಗುವುದಿಲ್ಲ."
+    }
+  },
+  {
+    "rule_id": "2.1.31",
+    "sutra": "पूर्वसदृशसमोनार्थकलहनिपुणमिश्रश्लक्ष्णैः",
+    "samasa_type": "तृतीया-तत्पुरुषः",
+    "purva": { "vibhakti": 3 },
+    "uttara": { 
+      "match_type": "exact_pratipadika", 
+      "words": ["पूर्व", "सदृश", "सम", "ऊन", "अर्थ", "कलह", "निपुण", "मिश्र", "श्लक्ष्ण", "अवर"] 
+    },
+    "semantic_check": { "required": false }
+  },
+  {
+    "rule_id": "2.1.30_32_33_34_35",
+    "sutra": "तृतीया तत्कृतार्थेन गुणवचनेन / कर्तृकरणे कृता बहुलम् / कृत्यैरधिकार्थवचने / अन्नेन व्यञ्जनम् / भक्ष्येण मिश्रीकरणम्",
+    "samasa_type": "तृतीया-तत्पुरुषः",
+    "purva": { "vibhakti": 3 },
+    "uttara": { "match_type": "semantic_dependent" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "tritiyaModal",
+      "options": [
+        { "key": "guna", "sutra": "2.1.30 (तृतीया तत्कृतार्थेन गुणवचनेन)", "label": "ತತ್ಕೃತ ಗುಣವಾಚಕ (Quality caused by Purvapada)" },
+        { "key": "kridanta", "sutra": "2.1.32 (कर्तृकरणे कृता बहुलम्)", "label": "ಕರ್ತೃ/ಕರಣ + ಕೃದಂತ (Agent/Instrument with Kridanta)" },
+        { "key": "kritya", "sutra": "2.1.33 (कृत्यैरधिकार्थवचने)", "label": "ಕೃತ್ಯ ಪ್ರತ್ಯಯಾಂತ + ಅತಿಶಯೋಕ್ತಿ (Exaggeration)" },
+        { "key": "anna", "sutra": "2.1.34-35 (अन्नेन व्यञ्जनम् / भक्ष्येण मिश्रीकरणम्)", "label": "ಅನ್ನ-ವ್ಯಂಜನ / ಆಹಾರ ಮಿಶ್ರಣ (Food combination)" }
+      ],
+      "if_false_msg": "ಯಾವುದೇ ತೃತೀಯಾ ಸಮಾಸದ ಸಂಬಂಧ ಹೊಂದಿಕೆಯಾಗದ ಕಾರಣ ಸಮಾಸವಾಗುವುದಿಲ್ಲ."
+    }
+  },
+  {
+    "rule_id": "2.1.36",
+    "sutra": "चतुर्थी तदर्थार्थबलिहितसुखरक्षितैः",
+    "samasa_type": "चतुर्थी-तत्पुरुषः",
+    "purva": { "vibhakti": 4 },
+    "uttara": { 
+      "match_type": "exact_or_semantic", 
+      "exact_words": ["अर्थ", "बलि", "हित", "सुख", "रक्षित"] 
+    },
+    "semantic_check": {
+      "required_if_not_exact": true,
+      "modal_id": "chaturthiModal",
+      "question_sa": "प्रकृति-विकृति-भावः अस्ति?",
+      "question_kn": "ಇಲ್ಲಿ ಪ್ರಕೃತಿ-ವಿಕೃತಿ ಭಾವ (ಮೂಲ ವಸ್ತುವು ಉತ್ಪನ್ನವಾಗಿ ಮಾರ್ಪಡುವ ಸಂಬಂಧ) ಇದೆಯೇ?",
+      "if_false_msg": "ಪ್ರಕೃತಿ-ವಿಕೃತಿ ಭಾವ ಇಲ್ಲದಿರುವುದರಿಂದ ಸಮಾಸವಾಗುವುದಿಲ್ಲ (ಉದಾ: रन्धनाय स्थाली)."
+    }
+  }
+]
