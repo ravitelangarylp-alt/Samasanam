@@ -2,7 +2,7 @@
   {
     "rule_id": "2.1.24",
     "sutra": "द्वितीया श्रितातीतपतितगतात्यस्तप्राप्तापन्नैः",
-    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "samasa_type": "द्वितीया-तत्पुरुषः (Accusative Tatpurusha)",
     "purva": { "vibhakti": 2 },
     "uttara": { 
       "match_type": "exact_pratipadika", 
@@ -13,7 +13,7 @@
   {
     "rule_id": "2.1.25",
     "sutra": "स्वयं क्तेन",
-    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "samasa_type": "द्वितीया-तत्पुरुषः (Accusative Tatpurusha)",
     "purva": { "exact_word": "स्वयम्", "type": "avyaya" },
     "uttara": { "match_type": "kta_anta" },
     "semantic_check": { "required": false }
@@ -21,21 +21,21 @@
   {
     "rule_id": "2.1.26",
     "sutra": "खट्वा क्षेपे",
-    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "samasa_type": "द्वितीया-तत्पुरुषः (Accusative Tatpurusha)",
     "purva": { "vibhakti": 2, "pratipadika": "खट्वा" },
     "uttara": { "match_type": "kta_anta" },
     "semantic_check": {
       "required": true,
       "modal_id": "kshepaModal",
-      "question_sa": "किम् अत्र क्षेपः (निन्दा) विवक्षितः?",
-      "question_kn": "ಇಲ್ಲಿ ನಿಂದೆ ಅಥವಾ ಅಪಹಾಸ್ಯದ ಉದ್ದೇಶವಿದೆಯೇ (ವಿವಕ್ಷೆ)?",
-      "if_false_msg": "ನಿಂದೆಯ ಉದ್ದೇಶವಿಲ್ಲದಿದ್ದರೆ ಸಮಾಸವಾಗುವುದಿಲ್ಲ. 'खट्वाम् आरूढः' ಎಂದೇ ಪ್ರತ್ಯೇಕವಾಗಿ ಉಳಿಯುತ್ತದೆ."
+      "question_sa": "किमत्र क्षेपः (निन्दा) विवक्षितः?",
+      "question_en": "Is censure / reproach (Ninda) intended by the speaker?",
+      "if_false_msg": "क्षेपाभावे समासो न भवति — Without censure, compounding is prohibited; the words remain separate as 'खट्वाम् आरूढः'."
     }
   },
   {
     "rule_id": "2.1.27",
     "sutra": "सामि क्तेन",
-    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "samasa_type": "द्वितीया-तत्पुरुषः (Accusative Tatpurusha)",
     "purva": { "exact_word": "सामि", "type": "avyaya" },
     "uttara": { "match_type": "kta_anta" },
     "semantic_check": { "required": false }
@@ -43,7 +43,7 @@
   {
     "rule_id": "2.1.28",
     "sutra": "कालाः",
-    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "samasa_type": "द्वितीया-तत्पुरुषः (Accusative Tatpurusha)",
     "purva": { "vibhakti": 2, "category": "kalavachaka" },
     "uttara": { "match_type": "kta_anta" },
     "semantic_check": { "required": false }
@@ -51,21 +51,21 @@
   {
     "rule_id": "2.1.29",
     "sutra": "अत्यन्तसंयोगे च",
-    "samasa_type": "द्वितीया-तत्पुरुषः",
+    "samasa_type": "द्वितीया-तत्पुरुषः (Accusative Tatpurusha)",
     "purva": { "vibhakti": 2, "category": "kalavachaka" },
     "uttara": { "match_type": "any" },
     "semantic_check": {
       "required": true,
       "modal_id": "atyantaModal",
-      "question_sa": "अत्यन्तसंयोगः विवक्षितः?",
-      "question_kn": "ಕಾಲದ ನಿರಂತರ ಸಂಬಂಧ (ಅತ್ಯಂತಸಂಯೋಗ) ವಿವಕ್ಷಿತವೇ?",
-      "if_false_msg": "ಅತ್ಯಂತಸಂಯೋಗ ವಿವಕ್ಷಿತವಲ್ಲದಿದ್ದರೆ ಈ ಸೂತ್ರದಿಂದ ಸಮಾಸವಾಗುವುದಿಲ್ಲ."
+      "question_sa": "किमत्र अत्यन्तसंयोगः (अविच्छिन्नकालसम्बन्धः) विवक्षितः?",
+      "question_en": "Is uninterrupted duration / complete connection (Atyanta-Samyoga) intended?",
+      "if_false_msg": "अत्यन्तसंयोगाभावे समासो न भवति — Without uninterrupted duration, compounding under 2.1.29 does not apply."
     }
   },
   {
     "rule_id": "2.1.31",
     "sutra": "पूर्वसदृशसमोनार्थकलहनिपुणमिश्रश्लक्ष्णैः",
-    "samasa_type": "तृतीया-तत्पुरुषः",
+    "samasa_type": "तृतीया-तत्पुरुषः (Instrumental Tatpurusha)",
     "purva": { "vibhakti": 3 },
     "uttara": { 
       "match_type": "exact_pratipadika", 
@@ -75,26 +75,28 @@
   },
   {
     "rule_id": "2.1.30_35",
-    "sutra": "तृतीया तत्कृतार्थेन गुणवचनेन / कर्तृकरणे कृता बहुलम् / कृत्यैरधिकार्थवचने / अन्नेन व्यञ्जनम् / भक्ष्येण मिश्रीकरणम्",
-    "samasa_type": "तृतीया-तत्पुरुषः",
+    "sutra": "तृतीया तत्कृतार्थेन गुणवचनेन (2.1.30) / कर्तृकरणे कृता बहुलम् (2.1.32) / अन्नेन व्यञ्जनम् (2.1.34)",
+    "samasa_type": "तृतीया-तत्पुरुषः (Instrumental Tatpurusha)",
     "purva": { "vibhakti": 3 },
     "uttara": { "match_type": "semantic_dependent" },
     "semantic_check": {
       "required": true,
       "modal_id": "tritiyaModal",
+      "question_sa": "तृतीया-तत्पुरुषे कः अर्थसम्बन्धः विवक्षितः?",
+      "question_en": "Select the intended semantic relationship for this Instrumental compound:",
       "options": [
-        { "key": "guna", "sutra": "2.1.30 (तृतीया तत्कृतार्थेन गुणवचनेन)", "label": "ತತ್ಕೃತ ಗುಣವಾಚಕ (Quality caused by Purvapada)" },
-        { "key": "kridanta", "sutra": "2.1.32 (कर्तृकरणे कृता बहुलम्)", "label": "ಕರ್ತೃ/ಕರಣ + ಕೃದಂತ (Agent/Instrument with Kridanta)" },
-        { "key": "kritya", "sutra": "2.1.33 (कृत्यैरधिकार्थवचने)", "label": "ಕೃತ್ಯ ಪ್ರತ್ಯಯಾಂತ + ಅತಿಶಯೋಕ್ತಿ (Exaggeration)" },
-        { "key": "anna", "sutra": "2.1.34-35 (अन्नेन व्यञ्जनम् / भक्ष्येण मिश्रीकरणम्)", "label": "ಅನ್ನ-ವ್ಯಂಜನ / ಆಹಾರ ಮಿಶ್ರಣ (Food combination)" }
+        { "key": "guna", "sutra": "2.1.30 (तृतीया तत्कृतार्थेन गुणवचनेन)", "label": "तत्कृत-गुणवचनम् — Quality produced by the Purvapada (e.g., शङ्कुलाखण्डः)" },
+        { "key": "kridanta", "sutra": "2.1.32 (कर्तृकरणे कृता बहुलम्)", "label": "कर्तृ-करणे कृदन्तः — Agent or Instrument with Kridanta (e.g., अहिहतः / परशुभिन्नः)" },
+        { "key": "kritya", "sutra": "2.1.33 (कृत्यैरधिकार्थवचने)", "label": "कृत्यप्रत्ययान्तः अतिशयोक्तौ — Exaggerated praise or blame (e.g., काकपेया)" },
+        { "key": "anna", "sutra": "2.1.34-35 (अन्नेन व्यञ्जनम् / भक्ष्येण मिश्रीकरणम्)", "label": "अन्न-व्यञ्जन-मिश्रीकरणम् — Food & condiment combination (e.g., दध्योदनः / गुडधानाः)" }
       ],
-      "if_false_msg": "ಯಾವುದೇ ತೃತೀಯಾ ಸಮಾಸದ ಸಂಬಂಧ ಹೊಂದಿಕೆಯಾಗದ ಕಾರಣ ಸಮಾಸವಾಗುವುದಿಲ್ಲ."
+      "if_false_msg": "तृतीया-समासस्य योग्यः अर्थसम्बन्धः नास्ति — None of the valid Instrumental relationships apply."
     }
   },
   {
     "rule_id": "2.1.36",
     "sutra": "चतुर्थी तदर्थार्थबलिहितसुखरक्षितैः",
-    "samasa_type": "चतुर्थी-तत्पुरुषः",
+    "samasa_type": "चतुर्थी-तत्पुरुषः (Dative Tatpurusha)",
     "purva": { "vibhakti": 4 },
     "uttara": { 
       "match_type": "exact_or_semantic", 
@@ -103,15 +105,15 @@
     "semantic_check": {
       "required_if_not_exact": true,
       "modal_id": "chaturthiModal",
-      "question_sa": "प्रकृति-विकृति-भावः अस्ति?",
-      "question_kn": "ಇಲ್ಲಿ ಪ್ರಕೃತಿ-ವಿಕೃತಿ ಭಾವ (ಮೂಲ ವಸ್ತುವು ಉತ್ಪನ್ನವಾಗಿ ಮಾರ್ಪಡುವ ಸಂಬಂಧ) ಇದೆಯೇ?",
-      "if_false_msg": "ಪ್ರಕೃತಿ-ವಿಕೃತಿ ಭಾವ ಇಲ್ಲದಿರುವುದರಿಂದ ಸಮಾಸವಾಗುವುದಿಲ್ಲ (ಉದಾ: रन्धनाय स्थाली)."
+      "question_sa": "किमत्र प्रकृति-विकृति-भावः विद्यते?",
+      "question_en": "Is there a material-to-product transformation (Prakriti-Vikriti-Bhava) between the two words?",
+      "if_false_msg": "प्रकृति-विकृति-भावाभावे चतुर्थी-समासो न भवति (यथा—रन्धनाय स्थाली) — Without material-to-product relation, Dative compounding is prohibited."
     }
   },
   {
     "rule_id": "2.1.37",
     "sutra": "पञ्चमी भयेन",
-    "samasa_type": "पञ्चमी-तत्पुरुषः",
+    "samasa_type": "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)",
     "purva": { "vibhakti": 5 },
     "uttara": { 
       "match_type": "exact_pratipadika", 
@@ -122,7 +124,7 @@
   {
     "rule_id": "2.1.38",
     "sutra": "अपेतापोढमुक्तपतितापत्रस्तैरल्पशः",
-    "samasa_type": "पञ्चमी-तत्पुरुषः",
+    "samasa_type": "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)",
     "purva": { "vibhakti": 5 },
     "uttara": { 
       "match_type": "exact_pratipadika", 
@@ -133,7 +135,7 @@
   {
     "rule_id": "2.1.39",
     "sutra": "स्तोकान्तिकदूरार्थकृच्छ्राणि क्तेन",
-    "samasa_type": "पञ्चमी-तत्पुरुषः",
+    "samasa_type": "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)",
     "purva": { 
       "vibhakti": 5, 
       "allowed_stems": ["स्तोक", "अन्तिक", "दूर", "कृच्छ्र", "अल्प", "निकट"] 
@@ -144,26 +146,26 @@
   {
     "rule_id": "2.2.8",
     "sutra": "षष्ठी",
-    "samasa_type": "षष्ठी-तत्पुरुषः",
+    "samasa_type": "षष्ठी-तत्पुरुषः (Genitive Tatpurusha)",
     "purva": { "vibhakti": 6 },
     "uttara": { "match_type": "shashthi_general" },
     "semantic_check": {
-      "required": true,
+      "required": false,
       "modal_id": "shashthiModal",
       "question_sa": "षष्ठी-समास-निषेध-परीक्षा (2.2.10 - 2.2.16)",
-      "question_kn": "ಇದು ಸಾಮಾನ್ಯ ಸಂಬಂಧ ಷಷ್ಠಿಯೇ ಅಥವಾ ಕೆಳಗಿನ ನಿಷೇಧಗಳಿಗೆ ಒಳಪಡುತ್ತದೆಯೇ?",
+      "question_en": "Verify whether this Genitive relation is a general relation or subject to prohibition (Nishedha):",
       "options": [
-        { "key": "valid_shashthi", "sutra": "2.2.8 (षष्ठी)", "label": "✅ ಸಾಮಾನ್ಯ ಷಷ್ಠೀ ಸಂಬಂಧ (ಸ್ವ-ಸ್ವಾಮಿ / ಅವಯವ-ಅವಯವಿ ಇತ್ಯಾದಿ — ಸಮಾಸವಾಗುತ್ತದೆ)" },
-        { "key": "nishedha_nirdharana", "sutra": "2.2.10 (न निर्धारणे)", "label": "❌ ನಿರ್ಧಾರಣ ಷಷ್ಠೀ (ಗುಂಪಿನಿಂದ ಒಂದನ್ನು ಶ್ರೇಷ್ಠವೆಂದು ಬೇರ್ಪಡಿಸುವುದು — ಸಮಾಸ ನಿಷಿದ್ಧ)", "is_nishedha": true },
-        { "key": "nishedha_purana", "sutra": "2.2.11 (पूरणगुणसुहितार्थसदव्ययतव्यसमानाधिकरणेन)", "label": "❌ ಪೂರಣ/ಗುಣ/ಶತೃ-ಶಾನಚ್/ತವ್ಯ/ಸಮಾನಾಧಿಕರಣ ಪದದೊಡನೆ (ಉದಾ: काकस्य कार्ष्ण्यम् — ಸಮಾಸ ನಿಷಿದ್ಧ)", "is_nishedha": true }
+        { "key": "valid_shashthi", "sutra": "2.2.8 (षष्ठी)", "label": "सामान्य-षष्ठी-सम्बन्धः — Valid Genitive relationship (Compounding permitted)" },
+        { "key": "nishedha_nirdharana", "sutra": "2.2.10 (न निर्धारणे)", "label": "निर्धारण-षष्ठी-निषेधः — Prohibited when singling out from a group (e.g., नृणां द्विजः श्रेष्ठः)", "is_nishedha": true },
+        { "key": "nishedha_purana", "sutra": "2.2.11 (पूरणगुणसुहितार्थसदव्ययतव्यसमानाधिकरणेन)", "label": "पूरण-गुण-तव्यादि-निषेधः — Prohibited with ordinals, qualities, or tavya-ending words", "is_nishedha": true }
       ],
-      "if_false_msg": "ಷಷ್ಠೀ ಸಮಾಸದ ನಿಷೇಧ ಸೂತ್ರ (2.2.10 / 2.2.11) ಅನ್ವಯಿಸುವುದರಿಂದ ಸಮಾಸವಾಗುವುದಿಲ್ಲ."
+      "if_false_msg": "षष्ठी-निषेध-सूत्रेण समासो न भवति — Compounding is prohibited under Paninian Shashthi-Nishedha rules (2.2.10 / 2.2.11)."
     }
   },
   {
     "rule_id": "2.1.40_41",
     "sutra": "सप्तमी शौण्डैः (2.1.40) / सिद्धशुष्कपक्वबन्धैश्च (2.1.41)",
-    "samasa_type": "सप्तमी-तत्पुरुषः",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
     "purva": { "vibhakti": 7 },
     "uttara": { 
       "match_type": "exact_pratipadika", 
@@ -174,20 +176,20 @@
   {
     "rule_id": "2.1.42_43_44",
     "sutra": "ध्वाङ्क्षेण क्षेपे (2.1.42) / कृत्यैरृणे (2.1.43) / संज्ञायाम् (2.1.44)",
-    "samasa_type": "सप्तमी-तत्पुरुषः",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
     "purva": { "vibhakti": 7 },
     "uttara": { "match_type": "semantic_dependent" },
     "semantic_check": {
       "required": true,
       "modal_id": "saptamiModal",
-      "question_sa": "सप्तमी-तत्पुरुष-विवक्षा-परीक्षा",
-      "question_kn": "ಈ ಸಪ್ತಮೀ ಸಮಾಸದಲ್ಲಿ ಯಾವ ವಿಶೇಷ ಅರ್ಥ (ವಿವಕ್ಷೆ) ಇದೆ?",
+      "question_sa": "सप्तमी-तत्पुरुषे का विवक्षा वर्तते?",
+      "question_en": "Select the specific semantic context for this Locative compound:",
       "options": [
-        { "key": "kshepa", "sutra": "2.1.42 (ध्वाङ्क्षेण क्षेपे)", "label": "ಕಾಗೆವಾಚಕ ಪದದೊಡನೆ ನಿಂದೆ/ಕ್ಷೇಪಾರ್ಥ (ಉದಾ: तीर्थे ध्वाङ्क्षः/काकः)" },
-        { "key": "runa", "sutra": "2.1.43 (कृत्यैरृणे)", "label": "ಕೃತ್ಯ ಪ್ರತ್ಯಯಾಂತದೊಡನೆ ಸಾಲ/ಆವಶ್ಯಕತೆ ಅರ್ಥ (ಉದಾ: मासे देयम्)" },
-        { "key": "samjna", "sutra": "2.1.44 (संज्ञायाम्)", "label": "ಸಂಜ್ಞೆ / ವಿಶೇಷ ಹೆಸರು (ಉದಾ: अरण्ये तिलकाः)" }
+        { "key": "kshepa", "sutra": "2.1.42 (ध्वाङ्क्षेण क्षेपे)", "label": "क्षेपे (निन्दायाम्) — Censure / reproach (e.g., तीर्थे ध्वाङ्क्षः ➔ तीर्थध्वाङ्क्षः)" },
+        { "key": "runa", "sutra": "2.1.43 (कृत्यैरृणे)", "label": "ऋणे (आवश्यकतायाम्) — Debt or obligation with Kritya affix (e.g., मासे देयम् ➔ मासदेयम्)" },
+        { "key": "samjna", "sutra": "2.1.44 (संज्ञायाम्)", "label": "संज्ञायाम् (नामविशेषे) — Specificproper name / idiom (e.g., अरण्ये तिलकाः ➔ अरण्यतिलकाः)" }
       ],
-      "if_false_msg": "ಸಪ್ತಮೀ ತತ್ಪುರುಷದ ಯಾವುದೇ ವಿಶೇಷ ವಿವಕ್ಷೆ ಇಲ್ಲದಿರುವುದರಿಂದ ಸಮಾಸವಾಗುವುದಿಲ್ಲ."
+      "if_false_msg": "सप्तमी-तत्पुरुषस्य विवक्षाभावात् समासो न भवति — No valid Locative semantic condition satisfied."
     }
   }
 ]
