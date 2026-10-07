@@ -13,6 +13,29 @@ var KALAVACHAKA_WORDS = new Set([
   "मास", "संवत्सर", "अहर्", "अहन्", "रात्रि", "दिवस", "मुहूर्त", "क्षण", "काल", "सप्ताह", "पक्ष", "ऋतु", "कल्प", "युग", "शरद्", "हेमन्त", "वसन्त", "ग्रीष्म", "वर्षा", "शिशिर"
 ]);
 
+const modelLingaMap = {
+  "राम": "P", "सीता": "S", "वन": "N", "हरि": "P", "नदी": "S", 
+  "मति": "S", "वारि": "N", "गुरु": "P", "वधू": "S", "मधु": "N", 
+  "पितृ": "P", "मातृ": "S", "विधातृ": "P", "अलङ्कर्तृ": "N"
+};
+
+const modelDictionary = {
+  "राम": "रामः;रामौ;रामाः;रामम्;रामौ;रामान्;रामेण;रामाभ्याम्;रामैः;रामाय;रामाभ्याम्;रामेभ्यः;रामाद्-रामात्;रामाभ्याम्;रामेभ्यः;रामस्य;रामयोः;रामाणाम्;रामे;रामयोः;रामेषु;हे राम;हे रामौ;हे रामाः",
+  "सीता": "सीता;सीते;सीताः;सीताम्;सीते;सीताः;सीतया;सीताभ्याम्;सीताभिः;सीतायै;सीताभ्याम्;सीताभ्यः;सीतायाः;सीताभ्याम्;सीताभ्यः;सीतायाः;सीतयोः;सीतानाम्;सीतायाम्;सीतयोः;सीतासु;हे सीते;हे सीते;हे सीताः",
+  "वन": "वनम्;वने;वनानि;वनम्;वने;वनानि;वनेन;वनाभ्याम्;वनैः;वनाय;वनाभ्याम्;वनेभ्यः;वनाद्-वनात्;वनाभ्याम्;वनेभ्यः;वनस्य;वनयोः;वनानाम्;वने;वनयोः;वनेषु;हे वन;हे वने;हे वनानि",
+  "हरि": "हरिः;हरी;हरयः;हरिम्;हरी;हरीन्;हरिणा;हरिभ्याम्;हरिभिः;हरये;हरिभ्याम्;हरिभ्यः;हरेः;हरिभ्याम्;हरिभ्यः;हरेः;हर्योः;हरीणाम्;हरौ;हर्योः;हरिषु;हे हरे;हे हरी;हे हरयः",
+  "नदी": "नदी;नद्यौ;नद्यः;नदीम्;नद्यौ;नदीः;नद्या;नदीभ्याम्;नदीभिः;नद्यै;नदीभ्याम्;नदीभ्यः;नद्याः;नदीभ्याम्;नदीभ्यः;नद्याः;नद्योः;नदीनाम्;नद्याम्;नद्योः;नदीषु;हे नदि;हे नद्यौ;हे नद्यः",
+  "मति": "मतिः;मती;मतयः;मतिम्;मती;मतीः;मत्या;मतिभ्याम्;मतिभिः;मतये-मत्यै;मतिभ्याम्;मतिभ्यः;मतेः-मत्याः;मतिभ्याम्;मतिभ्यः;मतेः-मत्याः;मत्योः;मतीनाम्;मतौ-मत्याम्;मत्योः;मतिषु;हे मते;हे मती;हे मतयः",
+  "वारि": "वारि;वारिणी;वारीणि;वारि;वारिणी;वारीणि;वारिणा;वारिभ्याम्;वारिभिः;वारिणे;वारिभ्याम्;वारिभ्यः;वारिणः;वारिभ्याम्;वारिभ्यः;वारिणः;वारिणोः;वारीणाम्;वारिणि;वारिणोः;वारिषु;हे वारि-हे वारे;हे वारिणी;हे वारीणि",
+  "गुरु": "गुरुः;गुरू;गुरवः;गुरुम्;गुरू;गुरून्;गुरुणा;गुरुभ्याम्;गुरुभिः;गुरवे;गुरुभ्याम्;गुरुभ्यः;गुरोः;गुरुभ्याम्;गुरुभ्यः;गुरोः;गुर्वोः;गुरूणाम्;गुरौ;गुर्वोः;गुरुषु;हे गुरो;हे गुरू;हे गुरवः",
+  "वधू": "वधूः;वध्वौ;वध्वः;वधूम्;वध्वौ;वधूः;वध्वा;वधूभ्याम्;वधूभिः;वध्वै;वधूभ्याम्;वधूभ्यः;वध्वाः;वधूभ्याम्;वधूभ्यः;वध्वाः;वध्वोः;वधूनाम्;वध्वाम्;वध्वोः;वधूषु;हे वधु;हे वध्वौ;हे वध्वः",
+  "मधु": "मधु;मधुनी;मधूनि;मधु;मधुनी;मधूनि;मधुना;मधुभ्याम्;मधुभिः;मधुने;मधुभ्याम्;मधुभ्यः;मधुनः;मधुभ्याम्;मधुभ्यः;मधुनः;मधुनोः;मधूनाम्;मधुनि;मधुनोः;मधुषु;हे मधु-हे मधो;हे मधुनी;हे मधूनि",
+  "पितृ": "पिता;पितरौ;पितरः;पितरम्;पितरौ;पितॄन्;पित्रा;पितृभ्याम्;पितृभिः;पित्रे;पितृभ्याम्;पितृभ्यः;पितुः;पितृभ्याम्;पितृभ्यः;पितुः;पित्रोः;पितॄणाम्;पितरि;पित्रोः;पितृषु;हे पितः;हे पितरौ;हे पितरः",
+  "मातृ": "माता;मातरौ;मातरः;मातरम्;मातरौ;मातॄः;मात्रा;मातृभ्याम्;मातृभिः;मात्रे;मातृभ्याम्;मातृभ्यः;मातुः;मातृभ्याम्;मातृभ्यः;मातुः;मात्रोः;मातॄणाम्;मातरि;मात्रोः;मातृषु;हे मातः;हे मातरौ;हे मातरः",
+  "विधातृ": "विधाता;विधातारौ;विधातारः;विधातारम्;विधातारौ;विधातॄन्;विधात्रा;विधातृभ्याम्;विधातृभिः;विधात्रे;विधातृभ्याम्;विधातृभ्यः;विधातुः;विधातृभ्याम्;विधातृभ्यः;विधातुः;विधात्रोः;विधातॄणाम्;विधातरि;विधात्रोः;विधातृषु;हे विधातः;हे विधातारौ;हे विधातारः",
+  "अलङ्कर्तृ": "अलङ्कर्तृ;अलङ्कर्तृणी;अलङ्कर्तॄणि;अलङ्कर्तृ;अलङ्कर्तृणी;अलङ्कर्तॄणि;अलङ्कर्तृणा-अलङ्कर्त्रा;अलङ्कर्तृभ्याम्;अलङ्कर्तृभिः;अलङ्कर्तृणे-अलङ्कर्त्रे;अलङ्कर्तृभ्याम्;अलङ्कर्तृभ्यः;अलङ्कर्तृणः-अलङ्कर्तुः;अलङ्कर्तृभ्याम्;अलङ्कर्तृभिः;अलङ्कर्तृणः-अलङ्कर्तुः;अलङ्कर्तृणोः-अलङ्कर्त्रोः;अलङ्कर्तॄणाम्;अलङ्कर्तृणि-अलङ्कर्तरि;अलङ्कर्तृणोः-अलङ्कर्त्रोः;अलङ्कर्तृषु;हे अलङ्कर्तृ-हे अलङ्कर्तः;हे अलङ्कर्तृणी;हे अलङ्कर्तॄणि"
+};
+
 var KNOWN_KTA_WORDS = new Set([
   "कृत", "आरूढ", "प्रमित", "भुक्त", "पीत", "गत", "आगत", "श्रित", "पतित", "अतीत", "प्राप्त", "आपन्न", "भिन्न", "हत", "दत्त", "उक्त", "बद्ध", "लब्ध", "भीत", "मुक्त", "अपेत", "अपोढ", "अपत्रस्त", "सिद्ध", "शुष्क", "पक्व"
 ]);
@@ -1248,23 +1271,91 @@ function openSuggestModal() {
   var wordInput = el("input");
   wordInput.type = "text";
   wordInput.id = "suggestWordInput";
-  wordInput.placeholder = "e.g., Shivani";
+  wordInput.placeholder = "e.g., कला (Devanagari)";
   wordField.appendChild(wordInput);
   box.appendChild(wordField);
 
   var modelField = el("div", "suggest-modal-field");
-  modelField.appendChild(el("label", "", "Model Word / Pattern"));
+  modelField.appendChild(el("label", "", "Model Word"));
   var modelSelect = el("select");
   modelSelect.id = "suggestModelSelect";
-  ["Nadi", "Rama", "Hari", "Ramaa", "Guru", "Pitru", "Bhanu", "Mati", "Other"].forEach(function(opt) {
+  Object.keys(modelDictionary).forEach(function(key) {
     var option = el("option");
-    option.value = opt;
-    option.textContent = opt;
-    if (opt === "Other") option.selected = true;
+    option.value = key;
+    option.textContent = key;
     modelSelect.appendChild(option);
   });
+  var otherOption = el("option");
+  otherOption.value = "OTHER";
+  otherOption.textContent = "OTHER";
+  modelSelect.appendChild(otherOption);
   modelField.appendChild(modelSelect);
   box.appendChild(modelField);
+
+  var customModelField = el("div", "suggest-modal-field");
+  customModelField.id = "customModelField";
+  customModelField.style.display = "none";
+  customModelField.appendChild(el("label", "", "Custom Model Word"));
+  var customModelInput = el("input");
+  customModelInput.type = "text";
+  customModelInput.id = "customModelInput";
+  customModelInput.placeholder = "Enter custom model word (Devanagari)";
+  customModelField.appendChild(customModelInput);
+  box.appendChild(customModelField);
+
+  var lingaField = el("div", "suggest-modal-field");
+  lingaField.appendChild(el("label", "", "Linga (Gender)"));
+  var lingaSelect = el("select");
+  lingaSelect.id = "suggestLingaSelect";
+  ["P", "S", "N"].forEach(function(l) {
+    var option = el("option");
+    option.value = l;
+    option.textContent = l === "P" ? "P (पुंलिङ्ग)" : (l === "S" ? "S (स्त्रीलिङ्ग)" : "N (नपुंसकलिङ्ग)");
+    lingaSelect.appendChild(option);
+  });
+  lingaField.appendChild(lingaSelect);
+  box.appendChild(lingaField);
+
+  var arthaField = el("div", "suggest-modal-field");
+  arthaField.appendChild(el("label", "", "Artha (हिन्दी अर्थ)"));
+  var arthaInput = el("input");
+  arthaInput.type = "text";
+  arthaInput.id = "suggestArthaInput";
+  arthaInput.placeholder = "e.g., कला, विद्या";
+  arthaField.appendChild(arthaInput);
+  box.appendChild(arthaField);
+
+  var arthaEngField = el("div", "suggest-modal-field");
+  arthaEngField.appendChild(el("label", "", "Artha English"));
+  var arthaEngInput = el("input");
+  arthaEngInput.type = "text";
+  arthaEngInput.id = "suggestArthaEngInput";
+  arthaEngInput.placeholder = "e.g., art, skill";
+  arthaEngField.appendChild(arthaEngInput);
+  box.appendChild(arthaEngField);
+
+  var vyutpattiField = el("div", "suggest-modal-field");
+  vyutpattiField.appendChild(el("label", "", "Vyutpatti (Etymology)"));
+  var vyutpattiInput = el("input");
+  vyutpattiInput.type = "text";
+  vyutpattiInput.id = "suggestVyutpattiInput";
+  vyutpattiInput.placeholder = "e.g., कृ + ल्युट्";
+  vyutpattiField.appendChild(vyutpattiInput);
+  box.appendChild(vyutpattiField);
+
+  modelSelect.onchange = function() {
+    var customField = document.getElementById("customModelField");
+    var lingaSelect = document.getElementById("suggestLingaSelect");
+    if (this.value === "OTHER") {
+      customField.style.display = "block";
+    } else {
+      customField.style.display = "none";
+      var autoLinga = modelLingaMap[this.value];
+      if (autoLinga) {
+        lingaSelect.value = autoLinga;
+      }
+    }
+  };
 
   var actions = el("div", "suggest-modal-actions");
   var cancelBtn = el("button", "suggest-modal-cancel", "Cancel");
@@ -1282,28 +1373,87 @@ function openSuggestModal() {
 function closeSuggestModal() {
   var overlay = document.getElementById("suggestModalOverlay");
   overlay.style.display = "none";
-  var wordInput = document.getElementById("suggestWordInput");
-  if (wordInput) wordInput.value = "";
+  var ids = ["suggestWordInput", "suggestModelSelect", "customModelInput", "suggestLingaSelect", "suggestArthaInput", "suggestArthaEngInput", "suggestVyutpattiInput"];
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      if (el.tagName === "SELECT") {
+        el.selectedIndex = 0;
+      } else {
+        el.value = "";
+      }
+    }
+  });
+  var customField = document.getElementById("customModelField");
+  if (customField) customField.style.display = "none";
 }
 
 function submitSuggestWord() {
   var wordInput = document.getElementById("suggestWordInput");
   var modelSelect = document.getElementById("suggestModelSelect");
+  var customModelInput = document.getElementById("customModelInput");
+  var lingaSelect = document.getElementById("suggestLingaSelect");
+  var arthaInput = document.getElementById("suggestArthaInput");
+  var arthaEngInput = document.getElementById("suggestArthaEngInput");
+  var vyutpattiInput = document.getElementById("suggestVyutpattiInput");
+
   var wordValue = wordInput ? wordInput.value.trim() : "";
-  var modelValue = modelSelect ? modelSelect.value : "Other";
+  var modelValue = modelSelect ? modelSelect.value : "";
+  var customModelValue = customModelInput ? customModelInput.value.trim() : "";
+  var lingaValue = lingaSelect ? lingaSelect.value : "";
+  var arthaValue = arthaInput ? arthaInput.value.trim() : "";
+  var arthaEngValue = arthaEngInput ? arthaEngInput.value.trim() : "";
+  var vyutpattiValue = vyutpattiInput ? vyutpattiInput.value.trim() : "";
 
   if (!wordValue) {
     alert("Please enter a Pratipadika (Word).");
     return;
   }
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxj1WrIWOtFfAHqdAIf5Rx6yHHpIVmmM8naBYz0ovjBBKSCVHDzigYWFXei4RYK03x/exec";
+  if (modelValue === "OTHER") {
+    if (!customModelValue) {
+      alert("Please enter a custom model word.");
+      return;
+    }
+  }
+
+  var finalModelWord = (modelValue === "OTHER") ? customModelValue : modelValue;
+  var finalLinga = lingaValue;
+
+  if (modelValue !== "OTHER" && modelLingaMap[modelValue]) {
+    finalLinga = modelLingaMap[modelValue];
+  }
+
+  var generatedForms = "";
+  if (modelDictionary[finalModelWord]) {
+    var modelFormsString = modelDictionary[finalModelWord];
+    var modelStem = finalModelWord.slice(0, -1);
+    var newWordStem = wordValue.slice(0, -1);
+    
+    var formsArray = modelFormsString.split(";");
+    var newFormsArray = formsArray.map(function(form) {
+      return form.split(modelStem).join(newWordStem);
+    });
+    generatedForms = newFormsArray.join(";");
+  }
+
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUA6jGA6wOokcuAUWEW9hjE9FlPBO1Kn66Qxxjkii5skhReOZKSdLYxQEbnCOdNHTo/exec";
+
+  var payload = {
+    pratipadika: wordValue,
+    model_word: finalModelWord,
+    linga: finalLinga,
+    forms: generatedForms,
+    artha: arthaValue,
+    artha_eng: arthaEngValue,
+    vyutpatti: vyutpattiValue
+  };
 
   fetch(SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ pratipadika: wordValue, model_word: modelValue })
+    body: JSON.stringify(payload)
   })
   .then(function() {
     alert("Thank you! Your word has been suggested.");
