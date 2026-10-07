@@ -200,7 +200,21 @@ function buildAppInterface() {
     ".modal-opt-sub { font-size: 12px; color: var(--primary); margin-top: 4px; }",
     ".modal-action-row { display: flex; gap: 12px; justify-content: center; }",
     ".modal-btn-yes { background: var(--success); color: #FFF; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }",
-    ".modal-btn-no, .modal-btn-cancel { background: #E7E5E4; color: #292524; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }"
+    ".modal-btn-no, .modal-btn-cancel { background: #E7E5E4; color: #292524; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }",
+    ".suggest-trigger-btn { display: inline-block; margin: 14px 0 0 0; padding: 9px 16px; background: transparent; color: var(--primary); border: 1px dashed var(--accent); border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }",
+    ".suggest-trigger-btn:hover { background: #FEF3C7; }",
+    ".suggest-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 1100; padding: 16px; }",
+    ".suggest-modal-box { background: #FFF; max-width: 520px; width: 100%; border-radius: 14px; padding: 26px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }",
+    ".suggest-modal-title { font-size: 20px; color: var(--primary); margin-bottom: 6px; }",
+    ".suggest-modal-sub { font-size: 13px; color: #57534E; margin-bottom: 18px; }",
+    ".suggest-modal-field { margin-bottom: 14px; }",
+    ".suggest-modal-field label { display: block; font-size: 13px; font-weight: 600; color: #57534E; margin-bottom: 6px; }",
+    ".suggest-modal-field input, .suggest-modal-field select { width: 100%; padding: 11px 14px; font-size: 16px; border: 2px solid var(--border); border-radius: 8px; outline: none; }",
+    ".suggest-modal-field input:focus, .suggest-modal-field select:focus { border-color: var(--accent); }",
+    ".suggest-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }",
+    ".suggest-modal-submit { background: var(--success); color: #FFF; border: none; padding: 11px 20px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }",
+    ".suggest-modal-submit:hover { background: #166534; }",
+    ".suggest-modal-cancel { background: #E7E5E4; color: #292524; border: none; padding: 11px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }"
   ].join("\n");
   document.head.appendChild(styleNode);
 
@@ -214,6 +228,10 @@ function buildAppInterface() {
   statusBadge.id = "engineStatus";
   header.appendChild(statusBadge);
   container.appendChild(header);
+
+  var suggestBtn = el("button", "suggest-trigger-btn", "➕ Suggest a New Word");
+  suggestBtn.onclick = openSuggestModal;
+  container.appendChild(suggestBtn);
 
   // Card 1: Samasa Generator
   var inputCard = el("div", "card");
@@ -359,6 +377,13 @@ function buildAppInterface() {
   modalBox.id = "dynamicModalBox";
   modalOverlay.appendChild(modalBox);
   document.body.appendChild(modalOverlay);
+
+  var suggestModalOverlay = el("div", "suggest-modal-overlay");
+  suggestModalOverlay.id = "suggestModalOverlay";
+  var suggestModalBox = el("div", "suggest-modal-box");
+  suggestModalBox.id = "suggestModalBox";
+  suggestModalOverlay.appendChild(suggestModalBox);
+  document.body.appendChild(suggestModalOverlay);
 }
 
 async function initEngine() {
@@ -1208,6 +1233,86 @@ function loadFallbackData() {
     { rule_id: "2.2.8", sutra: "षष्ठी", samasa_type: "षष्ठी-तत्पुरुषः (Genitive Tatpurusha)", purva: { vibhakti: 6 }, uttara: { match_type: "shashthi_general" }, semantic_check: { required: false, question_sa: "षष्ठी-समास-निषेध-परीक्षा (2.2.10 - 2.2.16)", question_en: "Verify whether this Genitive relation is permitted or prohibited:", options: [ { key: "valid", sutra: "2.2.8 (षष्ठी)", label: "सामान्य-षष्ठी-सम्बन्धः — Valid Genitive relationship (Compounding permitted)" }, { key: "nishedha", sutra: "2.2.10 (न निर्धारणे)", label: "निर्धारण-षष्ठी-निषेधः — Prohibited when singling out from a group (e.g., नृणां श्रेष्ठः)", is_nishedha: true } ] } },
     { rule_id: "2.1.40_41", sutra: "सप्तमी शौण्डैः (2.1.40) / सिद्धशुष्कपक्वबन्धैश्च (2.1.41)", samasa_type: "सप्तमी-तत्पुरुषः (Locative Tatpurusha)", purva: { vibhakti: 7 }, uttara: { match_type: "exact_pratipadika", words: ["शौण्ड", "धूर्त", "कितव", "व्याड", "प्रवीण", "संवीत", "अन्तर", "अधि", "पटु", "पण्डित", "कुशल", "चपल", "निपुण", "सिद्ध", "शुष्क", "पक्व", "बन्ध"] }, semantic_check: { required: false } }
   ];
+}
+
+function openSuggestModal() {
+  var overlay = document.getElementById("suggestModalOverlay");
+  var box = document.getElementById("suggestModalBox");
+  box.innerHTML = "";
+
+  box.appendChild(el("h3", "suggest-modal-title", "➕ Suggest a New Word"));
+  box.appendChild(el("p", "suggest-modal-sub", "Help grow the Samasanam lexicon by suggesting a new Sanskrit word."));
+
+  var wordField = el("div", "suggest-modal-field");
+  wordField.appendChild(el("label", "", "Pratipadika (Word)"));
+  var wordInput = el("input");
+  wordInput.type = "text";
+  wordInput.id = "suggestWordInput";
+  wordInput.placeholder = "e.g., Shivani";
+  wordField.appendChild(wordInput);
+  box.appendChild(wordField);
+
+  var modelField = el("div", "suggest-modal-field");
+  modelField.appendChild(el("label", "", "Model Word / Pattern"));
+  var modelSelect = el("select");
+  modelSelect.id = "suggestModelSelect";
+  ["Nadi", "Rama", "Hari", "Ramaa", "Guru", "Pitru", "Bhanu", "Mati", "Other"].forEach(function(opt) {
+    var option = el("option");
+    option.value = opt;
+    option.textContent = opt;
+    if (opt === "Other") option.selected = true;
+    modelSelect.appendChild(option);
+  });
+  modelField.appendChild(modelSelect);
+  box.appendChild(modelField);
+
+  var actions = el("div", "suggest-modal-actions");
+  var cancelBtn = el("button", "suggest-modal-cancel", "Cancel");
+  cancelBtn.onclick = closeSuggestModal;
+  actions.appendChild(cancelBtn);
+
+  var submitBtn = el("button", "suggest-modal-submit", "Suggest to Lexicon");
+  submitBtn.onclick = submitSuggestWord;
+  actions.appendChild(submitBtn);
+  box.appendChild(actions);
+
+  overlay.style.display = "flex";
+}
+
+function closeSuggestModal() {
+  var overlay = document.getElementById("suggestModalOverlay");
+  overlay.style.display = "none";
+  var wordInput = document.getElementById("suggestWordInput");
+  if (wordInput) wordInput.value = "";
+}
+
+function submitSuggestWord() {
+  var wordInput = document.getElementById("suggestWordInput");
+  var modelSelect = document.getElementById("suggestModelSelect");
+  var wordValue = wordInput ? wordInput.value.trim() : "";
+  var modelValue = modelSelect ? modelSelect.value : "Other";
+
+  if (!wordValue) {
+    alert("Please enter a Pratipadika (Word).");
+    return;
+  }
+
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxj1WrIWOtFfAHqdAIf5Rx6yHHpIVmmM8naBYz0ovjBBKSCVHDzigYWFXei4RYK03x/exec";
+
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pratipadika: wordValue, model_word: modelValue })
+  })
+  .then(function() {
+    alert("Thank you! Your word has been suggested.");
+    closeSuggestModal();
+  })
+  .catch(function(err) {
+    console.error("Submission error:", err);
+    alert("Something went wrong. Please try again later.");
+  });
 }
 
 window.addEventListener("DOMContentLoaded", initEngine);
