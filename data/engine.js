@@ -50,6 +50,9 @@ var SUP_PRATYAYA = {
   7: ["ङि", "ओस्", "सुप्"]
 };
 
+// Google Apps Script (Gemini backend) endpoint
+var GEMINI_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTA6JWIuzT8dh3S2BTOecQouvwMKFtBDMSUVYx5rqqOdPBfPkymGcy0rI-X_O45BeF/exec";
+
 var VIBHAKTI_NAMES_SA = {
   0: "अव्ययम् (Indeclinable)",
   1: "प्रथमा-विभक्तिः (Nominative)",
@@ -279,12 +282,35 @@ function buildAppInterface() {
   inp2.value = "पतिः";
   f2.appendChild(inp2);
 
+  var fViv = el("div", "field");
+  fViv.appendChild(el("label", "", "विवक्षा (Intention/Context) - Optional"));
+  var inpViv = el("input");
+  inpViv.type = "text";
+  inpViv.id = "purvaVivaksha";
+  inpViv.placeholder = "e.g., भूपतिः, कालवाचकम्";
+  fViv.appendChild(inpViv);
+
   var btnAnalyze = el("button", "btn-analyze", "संहिता क्रियताम् (Combine)");
-  btnAnalyze.onclick = runSamasaEngine;
+  btnAnalyze.onclick = function() {
+    var purvaInput = document.getElementById("purvaInput").value.trim();
+    var uttaraInput = document.getElementById("uttaraInput").value.trim();
+    var vivakshaInput = (document.getElementById("purvaVivaksha") || {}).value || "";
+    if (!purvaInput || !uttaraInput) {
+      alert("कृपया पूर्वपदम् उत्तरपदं च लिखत (Please enter both First Word and Second Word).");
+      return;
+    }
+    callGeminiBackend("Combine", {
+      words: purvaInput + " + " + uttaraInput,
+      purva: purvaInput,
+      uttara: uttaraInput,
+      vivaksha: vivakshaInput
+    });
+  };
 
   grid.appendChild(f1);
   grid.appendChild(plus);
   grid.appendChild(f2);
+  grid.appendChild(fViv);
   grid.appendChild(btnAnalyze);
   inputCard.appendChild(grid);
   container.appendChild(inputCard);
@@ -302,10 +328,30 @@ function buildAppInterface() {
   vInp.value = "सीतापतिः";
   vf.appendChild(vInp);
 
+  var vfViv = el("div", "field");
+  vfViv.appendChild(el("label", "", "विवक्षा (Intention/Context) - Optional"));
+  var vInpViv = el("input");
+  vInpViv.type = "text";
+  vInpViv.id = "samastaVivaksha";
+  vInpViv.placeholder = "e.g., षष्ठी-तत्पुरुषः, भयात्";
+  vfViv.appendChild(vInpViv);
+
   var btnVigraha = el("button", "btn-vigraha", "विग्रहः क्रियताम् (Split Word)");
-  btnVigraha.onclick = runVigrahaEngine;
+  btnVigraha.onclick = function() {
+    var samastaWord = (document.getElementById("samastaInput") || {}).value || "";
+    var vivakshaInput = (document.getElementById("samastaVivaksha") || {}).value || "";
+    if (!samastaWord) {
+      alert("कृपया समस्तपदं लिखत (Please enter a compound word to split).");
+      return;
+    }
+    callGeminiBackend("Split", {
+      word: samastaWord,
+      vivaksha: vivakshaInput
+    });
+  };
 
   vGrid.appendChild(vf);
+  vGrid.appendChild(vfViv);
   vGrid.appendChild(btnVigraha);
   vigCard.appendChild(vGrid);
 
@@ -715,6 +761,112 @@ function joinSamastaWithSandhi(pAna, uAna) {
   if (p === "युष्मद्") p = "त्वद्";
   if (p.endsWith("न्") && p !== "अहन्") p = p.slice(0, -2);
   return { samasta: p + uAna.surface, sandhiNote: "वर्णसंयोगः (Direct Concatenation)" };
+}
+
+function showLoadingIndicator(actionLabel) {
+  var resBox = document.getElementById("resultSection");
+  resBox.innerHTML = "";
+  resBox.style.display = "block";
+
+  var card = el("div", "result-card");
+  card.style.borderColor = "#D97706";
+  card.style.background = "#FFFBEB";
+
+  var hdr = el("div", "result-header");
+  hdr.appendChild(el("span", "badge-success", "⏳ " + actionLabel));
+  card.appendChild(hdr);
+
+  var hero = el("div", "samasta-hero");
+  hero.appendChild(el("div", "vigraha-part", "कृपया प्रतीक्षताम्... (Please wait — thinking...)"));
+  card.appendChild(hero);
+
+  card.appendChild(el("p", "", "गूगल-जिमिनि-समान्धिम् अनुवर्तनं क्रियते / Google Gemini API is processing your request..."));
+  resBox.appendChild(card);
+  resBox.scrollIntoView({ behavior: "smooth" });
+}
+
+function renderGeminiResult(action, payload, textResponse) {
+  var resBox = document.getElementById("resultSection");
+  resBox.innerHTML = "";
+  resBox.style.display = "block";
+
+  var card = el("div", "result-card success");
+  var hdr = el("div", "result-header");
+  hdr.appendChild(el("span", "badge-success", "✓ " + (action === "Combine" ? "समास-सिद्धिः (Valid Samāsa)" : "विग्रह-विश्लेषणम् (Vigraha Analysis)")));
+  card.appendChild(hdr);
+
+  var hero = el("div", "samasta-hero");
+  var inputLabel = action === "Combine"
+    ? (payload.words || (payload.purva + " + " + payload.uttara))
+    : payload.word;
+  hero.appendChild(el("div", "vigraha-part", "Input: " + inputLabel));
+  hero.appendChild(el("div", "arrow", "➔"));
+  hero.appendChild(el("div", "samasta-word", "जिमिनि-उत्तरम् (Gemini Response)"));
+  card.appendChild(hero);
+
+  var pBox = el("div", "prakriya-box");
+  pBox.appendChild(el("h4", "", "📜 " + (action === "Combine" ? "समास-निर्माण-फलम् (Compound Result)" : "विग्रह-फलम् (Decompound Result)")));
+
+  // Render Gemini text with basic line breaks preserved
+  var lines = String(textResponse || "").split(/\r?\n/);
+  var list = el("ol", "prakriya-steps");
+  lines.forEach(function(line) {
+    if (line.trim() === "") return;
+    var li = el("li", "", line.trim());
+    list.appendChild(li);
+  });
+  pBox.appendChild(list);
+  card.appendChild(pBox);
+
+  resBox.appendChild(card);
+  resBox.scrollIntoView({ behavior: "smooth" });
+}
+
+function renderGeminiError(action, errMsg) {
+  var resBox = document.getElementById("resultSection");
+  resBox.innerHTML = "";
+  resBox.style.display = "block";
+
+  var card = el("div", "result-card failure");
+  var hdr = el("div", "result-header");
+  hdr.appendChild(el("span", "badge-fail", "✗ त्रुटिः (Error)"));
+  card.appendChild(hdr);
+
+  card.appendChild(el("p", "", "जिमिनि-सम्बन्धं असफलम् अवा अनुपलभ्यम् — Gemini request failed or unavailable. " + errMsg));
+  resBox.appendChild(card);
+  resBox.scrollIntoView({ behavior: "smooth" });
+}
+
+function callGeminiBackend(action, payload) {
+  showLoadingIndicator(action === "Combine" ? "संयोजनं क्रियते (Combining...)" : "विग्रहः क्रियते (Splitting...)");
+
+  fetch(GEMINI_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({ action: action, payload: payload })
+  })
+  .then(function(response) {
+    return response.text().then(function(text) {
+      try {
+        var data = JSON.parse(text);
+        if (data && data.result) {
+          renderGeminiResult(action, payload, data.result);
+        } else if (data && data.error) {
+          renderGeminiError(action, data.error);
+        } else {
+          renderGeminiResult(action, payload, text || "No response text.");
+        }
+      } catch (e) {
+        renderGeminiResult(action, payload, text || "No response text.");
+      }
+    }).catch(function() {
+      renderGeminiResult(action, payload, "Request sent to backend. Check the GAS logs for the Gemini result.");
+    });
+  })
+  .catch(function(err) {
+    console.error("Gemini backend fetch error:", err);
+    renderGeminiError(action, String(err && err.message ? err.message : err));
+  });
 }
 
 function runSamasaEngine() {
@@ -1437,7 +1589,7 @@ function submitSuggestWord() {
     generatedForms = newFormsArray.join(";");
   }
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUA6jGA6wOokcuAUWEW9hjE9FlPBO1Kn66Qxxjkii5skhReOZKSdLYxQEbnCOdNHTo/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTA6JWIuzT8dh3S2BTOecQouvwMKFtBDMSUVYx5rqqOdPBfPkymGcy0rI-X_O45BeF/exec";
 
   var payload = {
     pratipadika: wordValue,
