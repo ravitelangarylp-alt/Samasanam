@@ -1,0 +1,158 @@
+[
+  {
+    "rule_id": "5.4.68",
+    "sutra": "समासान्ताः",
+    "samasa_type": "अधिकार-सूत्रम् (Adhikara/Master Rule for Samasanta Affixes)",
+    "priority": 100,
+    "semantic_check": {
+      "developer_note": "This is a global regulating sutra (Adhikara) governing all rules up to the end of the 5th Adhyaya. Affixes prescribed here form the final part of a compound. The compound formation is considered complete ONLY after applying these affixes. These affixes get the designation of 'Taddhita'."
+    },
+    "action": {
+      "apply_samasanta_affix": true
+    }
+  },
+  {
+    "rule_id": "5.4.69",
+    "sutra": "न पूजनात्",
+    "samasa_type": "समासान्त-निषेधः (Prohibition in praise context)",
+    "priority": 90,
+    "parent_dependency": "5.4.68",
+    "purva": {
+      "match_type": "exact_pratipadika",
+      "words": ["सु", "अति"]
+    },
+    "uttara": {
+      "match_type": "any"
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "pujanaModal",
+      "question_sa": "किम् अत्र 'सु' वा 'अति' शब्दः पूजनवाचकः (आदररूपेण) अस्ति?",
+      "question_en": "Do the prefixes 'su' or 'ati' express praise or respect?",
+      "if_false_msg": "पूजनाभावे समासान्तप्रत्ययः भवत्येव (उदा: परमराजः)।",
+      "developer_note": "Vartika restricts this prohibition only to 'su' and 'ati'. It applies to rules prior to 5.4.113."
+    },
+    "action": {
+      "block_samasanta_affix": true,
+      "example": "सु + राजन् -> सुराजन् (not सुराजः)"
+    }
+  },
+  {
+    "rule_id": "5.4.70",
+    "sutra": "किमः क्षेपे",
+    "samasa_type": "समासान्त-निषेधः (Prohibition in reproach context)",
+    "priority": 90,
+    "parent_dependency": "5.4.68",
+    "purva": {
+      "exact_word": "किम्"
+    },
+    "uttara": {
+      "match_type": "any"
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kshepaSamasantaModal",
+      "question_sa": "किम् अयं 'किम्' शब्दः क्षेपार्थे (निन्दायां) प्रयुक्तः अस्ति?",
+      "question_en": "Is the word 'kim' used in the sense of reproach/censure?",
+      "if_false_msg": "क्षेपाभावे समासान्तप्रत्ययः भवत्येव (उदा: किंराजः)।"
+    },
+    "action": {
+      "block_samasanta_affix": true,
+      "example": "किम् + राजन् -> किंराजन् (A bad king)"
+    }
+  },
+  {
+    "rule_id": "5.4.71",
+    "sutra": "नञस्तत्पुरुषात्",
+    "samasa_type": "समासान्त-निषेधः (Prohibition for Nan-Tatpurusha)",
+    "priority": 90,
+    "parent_dependency": "5.4.68",
+    "purva": {
+      "exact_word": "नञ्"
+    },
+    "uttara": {
+      "match_type": "any"
+    },
+    "match_logic": {
+      "samasa_category": "Tatpurusha"
+    },
+    "semantic_check": {
+      "required": false,
+      "developer_note": "Blocks samasanta affixes if the compound is Nan-Tatpurusha. Note: This does NOT apply to Nan-Bahuvrihi (e.g., adhura)."
+    },
+    "action": {
+      "block_samasanta_affix": true,
+      "example": "अ + राजन् -> अराजन् (not अराजा)"
+    }
+  },
+  {
+    "rule_id": "5.4.72",
+    "sutra": "पथो विभाषा",
+    "samasa_type": "समासान्त-विकल्पः (Optional affix for Pathin)",
+    "priority": 85,
+    "parent_dependency": "5.4.71",
+    "purva": {
+      "exact_word": "नञ्"
+    },
+    "uttara": {
+      "exact_word": "पथिन्"
+    },
+    "match_logic": {
+      "samasa_category": "Tatpurusha"
+    },
+    "semantic_check": {
+      "required": false,
+      "developer_note": "This makes the prohibition in 5.4.71 optional specifically for the word 'pathin'. It applies the 'a' affix (5.4.74) optionally. Does not apply to Nan-Bahuvrihi."
+    },
+    "action": {
+      "apply_samasanta_affix": "optional",
+      "affix": "अ",
+      "example_lopa": "अपथिन् (without affix)",
+      "example_affix": "अपथम् (with affix)"
+    }
+  },
+  {
+    "rule_id": "5.4.77",
+    "sutra": "अचतुरविचतुरसुचतुरस्त्रीपुंस...गोष्ठश्वाः",
+    "samasa_type": "समासान्त-प्रत्ययः (अच् - निपातनम्)",
+    "priority": 85,
+    "purva": { "match_type": "any" },
+    "uttara": { "match_type": "any" },
+    "match_logic": {
+      "is_nipatana": true,
+      "nipatana_words": [
+        "अचतुर", "विचतुर", "सुचतुर", "स्त्रीपुंस", "धेन्वनडुह", "ऋक्साम", "वाङ्मनस", "अक्षिभ्रुव", "दारगव", "ऊर्वष्ठीव", "पदष्ठीव", "नक्तंदिव", "रात्रिंदिव", "अहर्दिव", "सरजस", "निःश्रेयस", "पुरुषायुष", "द्व्यायुष", "त्र्यायुष", "ऋग्यजुष", "जातोक्ष", "महोक्ष", "वृद्धोक्ष", "उपशुन", "गोष्ठश्व"
+      ]
+    },
+    "semantic_check": {
+      "required": true,
+      "developer_note": "येते २५ शब्दाः निपातनेन (Irregularly) 'अच्' प्रत्ययं प्राप्नुवन्ति। Various samasa constraints apply strictly as per the sutra (e.g., stri-pumsau is Dvandva, sarajasam is Avyayibhava)."
+    },
+    "action": {
+      "apply_samasanta_affix": true,
+      "affix": "अच्",
+      "is_irregular_formation": true
+    }
+  },
+  {
+    "rule_id": "Vartika_5.4.77",
+    "sutra": "त्रिचतुरोपचतुरिति वक्तव्यम्",
+    "samasa_type": "समासान्त-प्रत्ययः (अच्)",
+    "priority": 85,
+    "purva": {
+      "match_type": "exact_pratipadika",
+      "words": ["त्रि", "उप"]
+    },
+    "uttara": {
+      "exact_word": "चतुर्"
+    },
+    "semantic_check": {
+      "required": false
+    },
+    "action": {
+      "apply_samasanta_affix": true,
+      "affix": "अच्",
+      "example": "त्रि + चतुर् + अच् -> त्रिचतुर"
+    }
+  }
+]

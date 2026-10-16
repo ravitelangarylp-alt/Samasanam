@@ -125,23 +125,51 @@
     "rule_id": "2.1.38",
     "sutra": "अपेतापोढमुक्तपतितापत्रस्तैरल्पशः",
     "samasa_type": "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)",
+    "priority": 70,
     "purva": { "vibhakti": 5 },
-    "uttara": { 
-      "match_type": "exact_pratipadika", 
-      "words": ["अपेत", "अपोढ", "मुक्त", "पतित", "अपत्रस्त"] 
+    "uttara": {
+      "match_type": "exact_pratipadika",
+      "words": ["अपेत", "अपोढ", "मुक्त", "पतित", "अपत्रस्त"]
     },
-    "semantic_check": { "required": false }
+    "semantic_check": {
+      "required": true,
+      "modal_id": "alpashaModal",
+      "question_sa": "किमत्र अल्पशः (क्रमशः/मन्दम्) विवक्षा वर्तते?",
+      "question_en": "Is the action gradual or slight (alpasha)?",
+      "if_false_msg": "अल्पशः इत्यस्य अभावे समासो न भवति (उदा: प्रासादात् पतितः) — Without gradual action, compounding is prohibited."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
   },
   {
     "rule_id": "2.1.39",
     "sutra": "स्तोकान्तिकदूरार्थकृच्छ्राणि क्तेन",
     "samasa_type": "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)",
-    "purva": { 
-      "vibhakti": 5, 
-      "allowed_stems": ["स्तोक", "अन्तिक", "दूर", "कृच्छ्र", "अल्प", "निकट"] 
+    "priority": 85,
+    "purva": {
+      "vibhakti": 5,
+      "allowed_stems": ["स्तोक", "अन्तिक", "दूर", "कृच्छ्र", "अल्प", "निकट"]
     },
     "uttara": { "match_type": "kta_anta" },
-    "semantic_check": { "required": false }
+    "semantic_check": { "required": false },
+    "action": { 
+      "execute_samasa": true, 
+      "drop_vibhakti": false, 
+      "external_rule_trigger": "6.3.2 (पञ्चम्याः स्तोकादिभ्यः)" 
+    }
+  },
+  {
+    "rule_id": "Vartika_2.1.39_1",
+    "sutra": "शतसहस्रान्तच्च परशब्दस्य",
+    "samasa_type": "तत्पुरुषः (राजदन्तादि गण - Irregular)",
+    "priority": 95,
+    "purva": { "exact_word": "पर" },
+    "uttara": { "match_type": "exact_pratipadika", "words": ["शत", "सहस्र"] },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "reverse_order": true,
+      "add_augment": "सुट्"
+    }
   },
   {
     "rule_id": "2.2.8",
@@ -163,33 +191,1086 @@
     }
   },
   {
-    "rule_id": "2.1.40_41",
-    "sutra": "सप्तमी शौण्डैः (2.1.40) / सिद्धशुष्कपक्वबन्धैश्च (2.1.41)",
+    "rule_id": "2.1.40",
+    "sutra": "सप्तमी शौण्डैः",
     "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
+    "priority": 70,
     "purva": { "vibhakti": 7 },
-    "uttara": { 
-      "match_type": "exact_pratipadika", 
-      "words": ["शौण्ड", "धूर्त", "कितव", "व्याड", "प्रवीण", "संवीत", "अन्तर", "अधि", "पटु", "पण्डित", "कुशल", "चपल", "निपुण", "सिद्ध", "शुष्क", "पक्व", "बन्ध"] 
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["शौण्ड", "धूर्त", "कितव", "व्याड", "प्रवीण", "संवीत", "अन्तर्", "अधि", "पटु", "अधिपटु", "पण्डित", "कुशल", "चपल", "निपुण", "संव्याड", "मन्य", "समीर"]
     },
-    "semantic_check": { "required": false }
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
   },
   {
-    "rule_id": "2.1.42_43_44",
-    "sutra": "ध्वाङ्क्षेण क्षेपे (2.1.42) / कृत्यैरृणे (2.1.43) / संज्ञायाम् (2.1.44)",
+    "rule_id": "2.1.41",
+    "sutra": "सिद्धशुष्कपक्वबन्धैश्च",
     "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
+    "priority": 70,
     "purva": { "vibhakti": 7 },
-    "uttara": { "match_type": "semantic_dependent" },
+    "uttara": {
+      "match_type": "exact_pratipadika",
+      "words": ["सिद्ध", "शुष्क", "पक्व", "बन्ध"]
+    },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.42",
+    "sutra": "ध्वाङ्क्षेण क्षेपे",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
+    "priority": 80,
+    "purva": { "vibhakti": 7 },
+    "uttara": {
+      "match_type": "exact_pratipadika",
+      "words": ["ध्वाङ्क्ष", "काक", "वायस"]
+    },
     "semantic_check": {
       "required": true,
-      "modal_id": "saptamiModal",
-      "question_sa": "सप्तमी-तत्पुरुषे का विवक्षा वर्तते?",
-      "question_en": "Select the specific semantic context for this Locative compound:",
-      "options": [
-        { "key": "kshepa", "sutra": "2.1.42 (ध्वाङ्क्षेण क्षेपे)", "label": "क्षेपे (निन्दायाम्) — Censure / reproach (e.g., तीर्थे ध्वाङ्क्षः ➔ तीर्थध्वाङ्क्षः)" },
-        { "key": "runa", "sutra": "2.1.43 (कृत्यैरृणे)", "label": "ऋणे (आवश्यकतायाम्) — Debt or obligation with Kritya affix (e.g., मासे देयम् ➔ मासदेयम्)" },
-        { "key": "samjna", "sutra": "2.1.44 (संज्ञायाम्)", "label": "संज्ञायाम् (नामविशेषे) — Specificproper name / idiom (e.g., अरण्ये तिलकाः ➔ अरण्यतिलकाः)" }
-      ],
-      "if_false_msg": "सप्तमी-तत्पुरुषस्य विवक्षाभावात् समासो न भवति — No valid Locative semantic condition satisfied."
+      "modal_id": "kshepaDhvankshaModal",
+      "question_sa": "किमत्र क्षेपः (निन्दा) विवक्षितः?",
+      "question_en": "Is contempt/censure implied?",
+      "if_false_msg": "क्षेपाभावे समासो न भवति (उदा: तीर्थे ध्वाङ्क्षः तिष्ठति) — Without contempt, compounding is prohibited."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.43",
+    "sutra": "कृत्यैर्ऋणे",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
+    "priority": 80,
+    "purva": { "vibhakti": 7 },
+    "uttara": { "match_type": "kritya_suffix", "suffix": "यत्" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "runaModal",
+      "question_sa": "किमत्र ऋणम् (नियोगः/निश्चितकालः) विवक्षितम्?",
+      "question_en": "Is a debt or appointed time implied?",
+      "if_false_msg": "ऋणाभावे समासो न भवति (उदा: मासे देया भिक्षा) — Without debt/appointed time, compounding is prohibited."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": false,
+      "external_rule_trigger": "6.3.14 (तत्पुरुषे कृति बहुलम्)"
     }
+  },
+  {
+    "rule_id": "2.1.44",
+    "sutra": "संज्ञायाम्",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha - Nitya)",
+    "priority": 90,
+    "purva": { "vibhakti": 7 },
+    "uttara": { "match_type": "any" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "sanjnaModal",
+      "question_sa": "किमयं समासः रूढः (संज्ञा/Appellative)?",
+      "question_en": "Is this a recognized Appellative/Idiom (Sanjna)?",
+      "if_false_msg": "संज्ञाया अभावे अयमलूक्-समासो न भवति — Without being an established appellative, this Nitya Samasa does not apply."
+    },
+    "action": {
+      "execute_samasa": true,
+      "is_nitya": true,
+      "drop_vibhakti": false,
+      "external_rule_trigger": "6.3.9 (हलदन्तात् सप्तम्याः संज्ञायाम्)"
+    }
+  },
+  {
+    "rule_id": "2.1.45",
+    "sutra": "क्तेनाहोरात्रावयवाः",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha)",
+    "priority": 70,
+    "purva": { "vibhakti": 7, "category": "ahoratra_avayava" },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ahoratraModal",
+      "question_sa": "किं पूर्वपदम् अहोरात्रस्य अवयवम् (भागम्) सूचयति?",
+      "question_en": "Does the Purvapada denote a specific division of day or night?",
+      "if_false_msg": "अवयवाभावे समासो न भवति (उदा: अहनि भुक्तम्) — Compounding is prohibited if it is just 'day/night' and not a division."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.46",
+    "sutra": "तत्र",
+    "samasa_type": "अव्ययपूर्वपद सप्तमी-तत्पुरुषः",
+    "priority": 70,
+    "purva": { "exact_word": "तत्र", "type": "avyaya" },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "merge_words": true }
+  },
+  {
+    "rule_id": "2.1.47",
+    "sutra": "क्षेपे",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha - Aluk)",
+    "priority": 85,
+    "purva": { "vibhakti": 7 },
+    "uttara": { "match_type": "kta_anta" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kshepaAlukModal",
+      "question_sa": "किमत्र क्षेपः (निन्दा) विवक्षितः?",
+      "question_en": "Is contempt/censure implied?",
+      "if_false_msg": "क्षेपाभावे अलूक्-समासो न भवति — Without contempt, this Aluk compounding does not apply."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": false,
+      "external_rule_trigger": "6.3.14 (तत्पुरुषे कृति बहुलम्)"
+    }
+  },
+  {
+    "rule_id": "2.1.48",
+    "sutra": "पात्रेसमितादयश्च",
+    "samasa_type": "सप्तमी-तत्पुरुषः (Locative Tatpurusha - Aluk)",
+    "priority": 90,
+    "purva": { "vibhakti": 7 },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["पात्रेसम्मित", "पात्रेबहुल", "उदुम्बरमशक", "कूपमण्डूक", "नगरवायस", "गेहेशूर", "गेहेमेही", "गोष्ठेशूर", "कर्णेचुरुचुरा"]
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "patresamitaModal",
+      "question_sa": "किमत्र क्षेपः (निन्दा) विवक्षितः?",
+      "question_en": "Is contempt implied?",
+      "if_false_msg": "क्षेपाभावे समासो न भवति — Without contempt, compounding is prohibited."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": false,
+      "lock_morphology": true
+    }
+  },
+  {
+    "rule_id": "2.1.49",
+    "sutra": "पूर्वकालैकसर्वजरत्पुराणनवकेवलाः समानाधिकरणेन",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 70,
+    "purva": {
+      "match_type": "exact_or_category",
+      "words": ["एक", "सर्व", "जरत्", "पुराण", "नव", "केवल"],
+      "category": "purvakala_kridanta"
+    },
+    "uttara": {
+      "match_type": "samanadhikarana",
+      "description": "Must be in the exact same case (Vibhakti) as Purvapada"
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "samanadhikaranaModal",
+      "question_sa": "किम् उभयोः पदयोः समानविभक्तित्वम् (समानाधिकरणम्) अस्ति?",
+      "question_en": "Are both words in the exact same case (apposition)?",
+      "if_false_msg": "समानाधिकरणाभावे कर्मधारय-समासो न भवति (उदा: एकस्याः शाटी) — Without both words being in the same case, Karmadharaya compounding is prohibited."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.53",
+    "sutra": "कुत्सितानि कुत्सनैः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 85,
+    "purva": { "match_type": "semantic", "description": "Vilified object (कुत्सित)" },
+    "uttara": { "match_type": "semantic", "description": "Term of contempt (कुत्सन)" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kutsitaModal",
+      "question_sa": "किम् अत्र पूर्वपदं कुत्सितं, उत्तरपदं च कुत्सनं (निन्दावाचकं) वर्तते?",
+      "question_en": "Does Purvapada imply a vilified object and Uttarapada a term of contempt?",
+      "if_false_msg": "उभयोः निन्दावाचकत्वाभावे अयं समासो न भवति (उदा: कुत्सितो ब्राह्मणः) — Rule does not apply if mutual contempt is absent."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "reverse_order": true,
+      "developer_note": "Override 2.1.57: Attributive word (Kutsana) stands SECOND."
+    }
+  },
+  {
+    "rule_id": "2.1.54",
+    "sutra": "पापाणके कुत्सितैः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 90,
+    "purva": { "match_type": "exact_pratipadika", "words": ["पाप", "अणक"] },
+    "uttara": { "match_type": "semantic", "description": "Vilified person/object" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "papaAnakaModal",
+      "question_sa": "किम् उत्तरपदं कुत्सितार्थं सूचयति?",
+      "question_en": "Does Uttarapada imply a vilified person/object?",
+      "if_false_msg": "कुत्सितार्थाभावे समासो न भवति — Without a vilified context, compounding is prohibited."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "force_position_first": ["पाप", "अणक"],
+      "developer_note": "Apavada to 2.1.53: Papa/Anaka MUST stand FIRST."
+    }
+  },
+  {
+    "rule_id": "2.1.55",
+    "sutra": "उपमानानि सामान्यवचनैः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 85,
+    "purva": { "match_type": "semantic", "description": "Standard of comparison (उपमान)" },
+    "uttara": { "match_type": "semantic", "description": "Common quality (सामान्यवचन)" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "upamanaModal",
+      "question_sa": "किम् अत्र उपमान-उपमेय-सम्बन्धः सामान्यगुणेन सह विद्यते?",
+      "question_en": "Is there an Upamana (standard) and Samanya-vachana (common quality) relationship?",
+      "if_false_msg": "उपमानाभावे समासो न भवति (उदा: देवदत्ता श्यामा) — Compounding prohibited without valid comparison."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.56",
+    "sutra": "उपमितं व्याघ्रादिभिः सामान्याप्रयोगे",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 90,
+    "purva": { "match_type": "semantic", "description": "Subject of comparison (उपमेय)" },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["व्याघ्र", "सिंह", "ऋक्ष", "ऋषभ", "चन्दन", "वृक", "वृष", "वराह", "हस्तिन", "तरु", "कुञ्जर", "रुरु", "पृषत", "पुण्डरीक", "पलाश", "कितव", "पद्म", "कमल", "किसलय", "चन्द्र"]
+    },
+    "semantic_check": {
+      "required": true,
+      "absence_of_samanya_required": true,
+      "modal_id": "upameyaVyaghraModal",
+      "question_sa": "किं वाक्ये सामान्यगुणवाचकः शब्दः (उदा: शूरः) प्रयुक्तः नास्ति?",
+      "question_en": "Is the common quality (Samanya-vachana) EXPLICITLY ABSENT from the sentence?",
+      "if_false_msg": "सामान्यगुणस्य प्रयोगे सति अयं समासो न भवति (उदा: पुरुषो व्याघ्र इव शूरः) — If the common quality is explicitly stated, this rule is prohibited."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "force_position_first": "Upameya",
+      "developer_note": "Ensures Upameya stays first despite other attribute rules."
+    }
+  },
+  {
+    "rule_id": "2.1.57",
+    "sutra": "विशेषणं विशेष्येण बहुलम्",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 60,
+    "purva": { "match_type": "semantic", "description": "Adjective / Qualifier (विशेषण)" },
+    "uttara": { "match_type": "semantic", "description": "Substantive / Qualified (विशेष्य)" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "visheshanaModal",
+      "question_sa": "किम् अत्र विशेषण-विशेष्य-भावः विद्यते तथा च बहुल-नियमेन निषेधः नास्ति?",
+      "question_en": "Is there an Adjective-Substantive relation, and is it permitted under the 'Bahulam' rule?",
+      "if_false_msg": "विशेषणाभावे वा बहुल-निषेधे सति समासो न भवति (उदा: रामो जामदग्न्यः) — Prohibited if terms are proper nouns or lack qualifier relation."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.58",
+    "sutra": "पूर्वापरप्रथमचरमजघन्यसमानमध्यमध्यमवीराश्च",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 75,
+    "purva": {
+      "match_type": "exact_pratipadika",
+      "words": ["पूर्व", "अपर", "प्रथम", "चरम", "जघन्य", "समान", "मध्य", "मध्यम", "वीर"]
+    },
+    "uttara": { "match_type": "samanadhikarana" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.60",
+    "sutra": "क्तेन नञ्विशिष्टेनानञ्",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 85,
+    "purva": { "match_type": "kta_anta", "has_nan": false, "description": "Kta-anta without negative particle" },
+    "uttara": { "match_type": "kta_anta", "has_nan": true, "description": "Same Kta-anta WITH negative particle (e.g. अकृत)" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "Vartika_2.1.60_1",
+    "sutra": "शाकपार्थिवादीनां सिद्धये उत्तरपदलोपोपसंख्यानम्",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (मध्यमपदलोपी - Middle Node Deletion)",
+    "priority": 95,
+    "purva": { "match_type": "any" },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["शाकपार्थिव", "कुतपसौश्रुत", "अजातौल्वलि"]
+    },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "delete_middle_node": true,
+      "developer_note": "Elision of the second member (e.g. शाकप्रियः + पार्थिवः = शाकपार्थिवः)"
+    }
+  },
+  {
+    "rule_id": "2.1.61",
+    "sutra": "सन्महत्परमोत्तमोत्कृष्टाः पूज्यमानैः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 80,
+    "purva": {
+      "match_type": "exact_pratipadika",
+      "words": ["सत्", "महत्", "परम", "उत्तम", "उत्कृष्ट"]
+    },
+    "uttara": { "match_type": "semantic", "description": "Object of respect" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "poojyamanaModal",
+      "question_sa": "किम् उत्तरपदं पूज्यमानं (सम्मानार्हं) वस्तु/व्यक्तिं सूचयति?",
+      "question_en": "Does the substantive denote a person/object deserving respect?",
+      "if_false_msg": "पूज्यमानार्थाभावे समासो न भवति — Prohibited if respect is not implied."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "external_rule_trigger": "6.3.46 (आन्महतः समानाधिकरणजातीययोः)"
+    }
+  },
+  {
+    "rule_id": "2.1.62",
+    "sutra": "वृन्दारकनागकुञ्जरैः पूज्यमानम्",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 80,
+    "purva": { "match_type": "semantic", "description": "Object of respect (पूज्यमान)" },
+    "uttara": {
+      "match_type": "exact_pratipadika",
+      "words": ["वृन्दारक", "नाग", "कुञ्जर"]
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "poojyamanaPurvaModal",
+      "question_sa": "किं पूर्वपदं पूज्यमानम् अस्ति?",
+      "question_en": "Is the Purvapada an object deserving respect?",
+      "if_false_msg": "पूज्यमानार्थाभावे समासो न भवति (उदा: सुसीमो नागः) — Prohibited if merely a name without respect."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "force_position_first": "Poojyamana"
+    }
+  },
+  {
+    "rule_id": "2.1.63",
+    "sutra": "कतरकतमौ जातिपरिप्रश्ने",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 75,
+    "purva": { "match_type": "exact_pratipadika", "words": ["कतर", "कतम"] },
+    "uttara": { "match_type": "samanadhikarana" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "jatiPrashnaModal",
+      "question_sa": "किम् अयं प्रश्नः जातिविषये (Genus/Class) अस्ति?",
+      "question_en": "Is the question about a Genus or Class (Jati)?",
+      "if_false_msg": "जातिप्रश्नाभावे समासो न भवति (उदा: कतरो भवतोर्देवदत्तः) — Without a query about genus, compounding is prohibited."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.64",
+    "sutra": "किं क्षेपे",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 80,
+    "purva": { "exact_word": "किम्" },
+    "uttara": { "match_type": "samanadhikarana" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kshepaKimModal",
+      "question_sa": "किम् अत्र क्षेपः (निन्दा) विवक्षितः?",
+      "question_en": "Is contempt/censure implied in the sentence?",
+      "if_false_msg": "क्षेपाभावे अयं समासो न भवति (उदा: कस्य राजा = किंराजः) — Without contempt, Karmadharaya does not apply."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "external_rule_trigger": "5.4.70 (किमः क्षेपे - टच्-प्रत्ययस्य निषेधः)",
+      "developer_note": "Ensures the final form remains 'किंराजा' instead of taking the 'टच्' affix to become 'किंराज'."
+    }
+  },
+  {
+    "rule_id": "2.1.65",
+    "sutra": "पोटायुवतिस्तोककतिपयगृष्टिधेनुवशावेहत्बष्कयणीप्रवक्तृश्रोत्रियाध्यापकधूर्तैर्जातिः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 85,
+    "purva": { "match_type": "semantic", "description": "Genus / Jati (जाति)" },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["पोटा", "युवति", "स्तोक", "कतिपय", "गृष्टि", "धेनु", "वशा", "वेहत्", "बष्कयणी", "प्रवक्तृ", "श्रोत्रिय", "अध्यापक", "धूर्त"]
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "jatiPurvaModal",
+      "question_sa": "किं पूर्वपदं जातिवाचकम् अस्ति?",
+      "question_en": "Is the Purvapada a Genus/Jati-vachaka?",
+      "if_false_msg": "पूर्वपदस्य जातिवाचकत्वाभावे समासो न भवति (उदा: देवदत्तः प्रवक्ता) — Compounding prohibited if the first word is a proper noun."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.66",
+    "sutra": "प्रशंसावचनैश्च",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 80,
+    "purva": { "match_type": "semantic", "description": "Genus / Jati (जाति)" },
+    "uttara": { "match_type": "semantic", "description": "Rudhi word denoting praise/excellence (e.g., मतल्लिका, प्रकाण्डम्)" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "prashansaModal",
+      "question_sa": "किम् उत्तरपदं प्रशंसावाचकं रूढिशब्दं तथा पूर्वपदं जातिवाचकं वर्तते?",
+      "question_en": "Is Uttarapada a Rudhi word for praise AND Purvapada a Genus?",
+      "if_false_msg": "जात्यभावे समासो न भवति (उदा: कुमारी मतल्लिका) — Prohibited without a Genus."
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "retain_uttarapada_gender": true
+    }
+  },
+  {
+    "rule_id": "2.1.67",
+    "sutra": "युवा खलतिपलितवलिनजरतीभिः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 75,
+    "purva": { "base_word": "युवन्", "forms": ["युवा", "युवतिः"] },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["खलति", "पलित", "वलिन", "जरत्", "जरती"]
+    },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "apply_gender_matching": true
+    }
+  },
+  {
+    "rule_id": "2.1.68",
+    "sutra": "कृत्यतुल्याख्या अजात्या",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 80,
+    "purva": { "match_type": "krutya_or_tulya", "synonyms": ["तुल्य", "सदृश", "समान"] },
+    "uttara": { "match_type": "semantic", "description": "Non-genus / Specific attribute (अजाति)" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ajatiModal",
+      "question_sa": "किम् उत्तरपदम् अजातिवाचकम् अस्ति?",
+      "question_en": "Is the Uttarapada an Ajati (Non-genus)?",
+      "if_false_msg": "उत्तरपदस्य जातिवाचकत्वे समासो न भवति (उदा: भोज्य ओदनः) — Prohibited if the second word denotes a Genus."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.69",
+    "sutra": "वर्णो वर्णेन",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 75,
+    "purva": { "match_type": "semantic", "description": "Colour / Varna" },
+    "uttara": { "match_type": "semantic", "description": "Colour / Varna" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "varnaModal",
+      "question_sa": "किम् उभयपदं वर्णवाचकम् अस्ति?",
+      "question_en": "Do both words denote a color?",
+      "if_false_msg": "वर्णाभावे समासो न भवति — Both must denote colors."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.70",
+    "sutra": "कुमारः श्रमणादिभिः",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 80,
+    "purva": { "base_word": "कुमार", "forms": ["कुमारः", "कुमारी"] },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["श्रमणा", "प्रव्रजिता", "कुलटा", "गर्भिणी", "तापसी", "दासी", "बन्धकी", "अध्यापक", "अभिरूपक", "पण्डित", "मृदु", "कुशल", "चपल", "निपुण"]
+    },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "apply_gender_matching": true
+    }
+  },
+  {
+    "rule_id": "2.1.71",
+    "sutra": "चतुष्पादो गर्भिण्या",
+    "samasa_type": "समानाधिकरण-तत्पुरुषः (कर्मधारय - Karmadharaya)",
+    "priority": 75,
+    "purva": { "match_type": "semantic", "description": "Quadruped / चतुष्पात्" },
+    "uttara": { "exact_word": "गर्भिणी" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "chatushpatJatiModal",
+      "question_sa": "किं पूर्वपदं चतुष्पाज्जातिं (Genus of quadrupeds) सूचयति?",
+      "question_en": "Does the Purvapada denote a Genus of quadrupeds?",
+      "if_false_msg": "जात्यभावे समासो न भवति (उदा: कालाक्षी गर्भिणी, ब्राह्मणी गर्भिणी) — Prohibited if not a quadruped genus."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.1.72",
+    "sutra": "मयूरव्यंसकादयश्च",
+    "samasa_type": "तत्पुरुषः (मयूरव्यंसकादि - निपातनम् / Irregular Tatpurusha)",
+    "priority": 95,
+    "purva": { "match_type": "any" },
+    "uttara": { "match_type": "any" },
+    "match_logic": {
+      "type": "nipatana_or_pattern",
+      "gana_list": ["मयूरव्यंसक", "छात्रव्यंसक", "कम्बोजमुण्ड", "यवनमुण्ड", "हस्तेगृह्य", "एहीडम्", "उच्चावचम्", "अकिञ्चन", "खादतमोदता", "अश्नीतपिबता", "द्रव्यान्तरम्"],
+      "structural_patterns": [
+        { "pattern": "Verb_Imperative + Noun", "gana_sutra": "एहीडादयोऽन्यपदार्थे" },
+        { "pattern": "Verb_Imperative + Object", "gana_sutra": "जहि कर्मणा बहुलमाभीक्ष्ण्ये" },
+        { "pattern": "Verb + Verb", "gana_sutra": "आख्यातमाख्यातेन क्रियासातत्ये", "description": "Continuous action" }
+      ]
+    },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "is_irregular_nipatana": true,
+      "lock_morphology": true,
+      "developer_note": "The restrictive 'cha' prevents this compound from entering into further compounds (e.g., परममयूरव्यंसक is invalid)."
+    }
+  },
+  {
+    "rule_id": "2.2.1",
+    "sutra": "पूर्वापराधरोत्तरमेकदेशिनैकाधिकरणे",
+    "samasa_type": "प्रथमा-तत्पुरुषः (एकादेशिसमासः - Exception to Shashthi)",
+    "priority": 85,
+    "purva": { "match_type": "gana_list", "words": ["पूर्व", "अपर", "अधर", "उत्तर"], "vibhakti": 1 },
+    "uttara": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ekadhikaranaModal",
+      "question_sa": "किम् उत्तरपदम् एकाधिकरणं (एकत्वसङ्ख्याविशिष्टम् अवयविनं) सूचयति?",
+      "question_en": "Does Uttarapada represent a single whole entity (ekadhikarana) of which Purvapada is a part?",
+      "if_false_msg": "एकाधिकरणाभावे अयं समासो न भवति (उदा: पूर्वं छात्राणाम्) — Prohibited if the whole is plural/multiple."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "force_position_first": "Purvapada" }
+  },
+  {
+    "rule_id": "2.2.2",
+    "sutra": "अर्धं नपुंसकम्",
+    "samasa_type": "प्रथमा-तत्पुरुषः (एकादेशिसमासः)",
+    "priority": 85,
+    "purva": { "exact_word": "अर्ध", "gender": "neuter", "description": "Exactly equal half" },
+    "uttara": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ardhaEkadhikaranaModal",
+      "question_sa": "किम् उत्तरपदम् एकाधिकरणं अस्ति?",
+      "question_en": "Is Uttarapada a single whole entity?",
+      "if_false_msg": "बहुवचने असमविभागे वा अयं समासो न भवति।"
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "force_position_first": "अर्ध" }
+  },
+  {
+    "rule_id": "2.2.3",
+    "sutra": "द्वितीयतृतीयचतुर्थतुर्याण्यन्यतरस्याम्",
+    "samasa_type": "प्रथमा-तत्पुरुषः / षष्ठी-तत्पुरुषः (Optional)",
+    "priority": 85,
+    "purva": { "match_type": "gana_list", "words": ["द्वितीय", "तृतीय", "चतुर्थ", "तुर्य", "तुरीय"] },
+    "uttara": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "semantic_check": { "required": true, "extends": "2.2.1" },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "is_optional": true,
+      "override_rule": "2.2.11"
+    }
+  },
+  {
+    "rule_id": "2.2.4",
+    "sutra": "प्राप्तापन्ने च द्वितीयया",
+    "samasa_type": "तत्पुरुषः (Optional Override)",
+    "priority": 85,
+    "purva": { "match_type": "exact_pratipadika", "words": ["प्राप्त", "आपन्न"] },
+    "uttara": { "match_type": "vibhakti_check", "vibhakti": 2 },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "is_optional": true, "force_position_first": "Purvapada" }
+  },
+  {
+    "rule_id": "2.2.5",
+    "sutra": "कालाः परिमाणिना",
+    "samasa_type": "षष्ठी-तत्पुरुषः (Special Rule)",
+    "priority": 80,
+    "purva": { "match_type": "category", "category": "time_measurement" },
+    "uttara": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kalaParimaninModal",
+      "question_en": "Does the time word measure the duration/age of the object denoted by Uttarapada?",
+      "if_false_msg": "परिमाणिन्-अभावे समासो न भवति।"
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "force_position_first": "Time_Word" }
+  },
+  {
+    "rule_id": "2.2.6",
+    "sutra": "नञ्",
+    "samasa_type": "नञ्-तत्पुरुषः",
+    "priority": 90,
+    "purva": { "exact_word": "न", "type": "avyaya_particle" },
+    "uttara": { "match_type": "subanta" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "route_to_morphology_engine": ["6.3.73", "6.3.74"] }
+  },
+  {
+    "rule_id": "6.3.73",
+    "sutra": "नलोपो नञः",
+    "samasa_type": "Morphology_Rule (Sub-String Deletion)",
+    "parent_dependency": "2.2.6",
+    "condition": { "uttarapada_first_char": "consonant (हल्)" },
+    "action": { "delete_char": "न", "keep_char": "अ", "result": "अ + Uttarapada" }
+  },
+  {
+    "rule_id": "6.3.74",
+    "sutra": "तस्मान्नुडचि",
+    "samasa_type": "Morphology_Rule (String Insertion)",
+    "parent_dependency": "6.3.73",
+    "condition": { "uttarapada_first_char": "vowel (अच्)" },
+    "action": { "insert_augment": "न् (नुट्)", "result": "अ + न् + Uttarapada" }
+  },
+  {
+    "rule_id": "2.2.7",
+    "sutra": "ईषदकृता",
+    "samasa_type": "तत्पुरुषः",
+    "priority": 80,
+    "purva": { "exact_word": "ईषत्" },
+    "uttara": { "match_type": "non_krit_suffix" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ishatGunaModal",
+      "question_en": "Does Uttarapada express a quality/adjective (gunavachana)?",
+      "if_false_msg": "गुणवाचकत्वाभावे समासो न भवति।"
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.2.8",
+    "sutra": "षष्ठी",
+    "samasa_type": "षष्ठी-तत्पुरुषः (Master Trigger)",
+    "priority": 50,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6, "is_pratipadavidhana": false },
+    "uttara": { "match_type": "subanta" },
+    "semantic_check": {
+      "required": true,
+      "developer_note": "Ensures the genitive represents relation (shesha), unless overridden by Krit rules (2.3.65)."
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.2.9",
+    "sutra": "याजकादिभिश्च",
+    "samasa_type": "षष्ठी-तत्पुरुषः (Whitelist Exception)",
+    "priority": 95,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": {
+      "match_type": "gana_list",
+      "words": ["याजक", "पूजक", "परिचारक", "परिवेषक", "परिषेचक", "स्नापक", "स्नातक", "अध्यापक", "उत्साहक", "उत्सादक", "उद्वर्तक", "होतृ", "नर्तृ", "रथगणक", "पत्तिगणक", "पोतृ", "हतृ", "वर्तक"]
+    },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "override_prohibition": "2.2.15"
+    }
+  },
+  {
+    "rule_id": "Vartika_2.2.9_1",
+    "sutra": "गुणात्तरणे तरलोपश्च",
+    "samasa_type": "षष्ठी-तत्पुरुषः (Suffix Deletion)",
+    "priority": 95,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": { "match_type": "suffix_check", "suffix": "तरप्" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "gunaTarapModal",
+      "question_en": "Is Uttarapada an adjective of quality?",
+      "if_false_msg": "गुणवाचकत्वाभावे अयं समासो न भवति।"
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "delete_suffix": "तर" }
+  },
+  {
+    "rule_id": "Vartika_2.2.9_2",
+    "sutra": "कृद्योगा च षष्ठी समस्यते",
+    "samasa_type": "षष्ठी-तत्पुरुषः (Krit Exception)",
+    "priority": 95,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6, "source_rule": "2.3.65 (कर्तृकर्मणोः कृति)" },
+    "uttara": { "match_type": "krit_derivative" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.2.10",
+    "sutra": "न निर्धारणे",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6, "source_rule": "2.3.41 (यतश्च निर्धारणम्)" },
+    "uttara": { "match_type": "any" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "nirdharanaModal",
+      "question_en": "Does the Genitive word imply separating one from many based on genus, attribute or action?",
+      "if_false_msg": "If yes, block Samasa."
+    },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "Vartika_2.2.10",
+    "sutra": "प्रतिपदविधाना च षष्ठी न समस्यते",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 95,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6, "source_rule_not": "2.3.50 (षष्ठी शेषे)" },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.11",
+    "sutra": "पूरणगुणसुहितार्थसदव्ययतव्यसमानाधिकरणेन",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": {
+      "match_type": "prohibition_types",
+      "categories": ["purna_ordinal", "guna_attribute", "suhitartha_satisfaction", "sat_participle", "avyaya", "tavya_suffix", "samanadhikarana_apposition"],
+      "exceptions": ["तव्यत्"]
+    },
+    "semantic_check": { "required": false },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.12",
+    "sutra": "क्तेन च पूजायाम्",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": { "match_type": "suffix_check", "suffix": "क्त" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ktaPujaModal",
+      "question_en": "Does the Kta suffix denote respect, inclination, or understanding (Puja/Mati/Buddhi)?",
+      "if_false_msg": "If yes, block Samasa."
+    },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.13",
+    "sutra": "अधिकरणवाचिना च",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": { "match_type": "suffix_check", "suffix": "क्त" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "ktaAdhikaranaModal",
+      "question_en": "Does the Kta suffix denote the locality of the action (Adhikarana)?",
+      "if_false_msg": "If yes, block Samasa."
+    },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.14",
+    "sutra": "कर्मणि च",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6, "syntactic_role": "Object/Karma" },
+    "uttara": { "match_type": "any" },
+    "semantic_check": {
+      "required": true,
+      "developer_note": "Block if the genitive word acts as the syntactical object (karma) of the action."
+    },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.15",
+    "sutra": "तृजकाभ्यां कर्तरि",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6, "syntactic_role": "Agent/Kartr" },
+    "uttara": { "match_type": "suffix_check", "suffixes": ["तृच्", "अक"] },
+    "semantic_check": {
+      "required": true,
+      "developer_note": "Block if the genitive acts as the agent (kartari) and uttarapada ends in trij/aka."
+    },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.16",
+    "sutra": "कर्तरि च",
+    "samasa_type": "षष्ठी-तत्पुरुषः (निषेध / Prohibition)",
+    "priority": 90,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": {
+      "match_type": "suffix_check",
+      "suffixes": ["तृच्", "अक"],
+      "syntactic_role": "Agent/Kartr",
+      "exclude_from_list": "Yajakadi_List"
+    },
+    "semantic_check": {
+      "required": true,
+      "developer_note": "Block if uttarapada affix denotes the agent (kartari), and it's not in the 2.2.9 yajakadi exception list."
+    },
+    "action": { "block_samasa": true }
+  },
+  {
+    "rule_id": "2.2.17",
+    "sutra": "नित्यं क्रीडाजीविकयोः",
+    "samasa_type": "षष्ठी-तत्पुरुषः (नित्य-समासः)",
+    "priority": 95,
+    "purva": { "match_type": "vibhakti_check", "vibhakti": 6 },
+    "uttara": { "match_type": "suffix_check", "suffix": "अक" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "kridaJivikaModal",
+      "question_sa": "किम् अयं समासः विशिष्टां क्रीडां जीविकां वा सूचयति?",
+      "question_en": "Does the compound denote a specific sport (krida) or profession/livelihood (jivika)?",
+      "if_false_msg": "क्रीडाजीविकयोः अभावे अयं नित्यसमासो न भवति।"
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "is_nitya_samasa": true,
+      "override_prohibition": "2.2.16 (कर्तरि च)"
+    }
+  },
+  {
+    "rule_id": "2.2.18",
+    "sutra": "कुगतिप्रादयः",
+    "samasa_type": "तत्पुरुषः (कु-गति-प्रादि नित्य-समासः)",
+    "priority": 90,
+    "purva": {
+      "match_type": "prefix_array_or_dynamic",
+      "arrays_to_check": {
+        "ku_prefix": ["कु", "कद्", "का", "कव", "किम्"],
+        "pradi_list": ["प्र", "परा", "अप", "सम्", "अनु", "अव", "निस्", "निर्", "दुस्", "दुर्", "वि", "आङ्", "नि", "अधि", "अपि", "अति", "सु", "उद्", "अभि", "प्रति", "परि", "उप"],
+        "gati_static": ["उरी", "उररी", "तन्ती", "ताली", "आताली", "वेताली", "धूली", "धूसी", "शकाली", "शर्काली", "छमष्कृती", "सप्फत्कृती", "पम्फत्कृती", "अद्धा", "छद्धा", "मसमसा", "सकारा", "सहकारा"],
+        "gati_special": ["सत्", "असत्", "अलम्", "खलु", "साक्षात्", "मिथ्या", "प्रादुर्", "आर्य", "श्रद्ध", "अन्तर्", "कणे", "मनस्", "पुरस्", "अस्तम्", "अच्छ", "अदो", "अमा", "उपाजे", "अन्वाजे"]
+      },
+      "dynamic_flags": {
+        "ends_with_chvi": true,
+        "ends_with_dach": true
+      }
+    },
+    "uttara": { "match_type": "subanta" },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "is_nitya_samasa": true
+    }
+  },
+  {
+    "rule_id": "2.2.19",
+    "sutra": "उपपदमतिङ्",
+    "samasa_type": "उपपद-तत्पुरुषः (नित्य-समासः)",
+    "priority": 90,
+    "purva": { "match_type": "syntactic_role", "role": "Upapada", "source_rule": "3.1.92" },
+    "uttara": { "match_type": "krudanta", "prohibited_suffix": "तिङ्" },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "is_nitya_samasa": true,
+      "execution_order_hook": "Praak_Subutpatteh",
+      "developer_note": "Compounding must be executed on the base form of the Uttarapada before any declensional case affixes (sup) are applied."
+    }
+  },
+  {
+    "rule_id": "2.2.23_24",
+    "sutra": "शेषो बहुव्रीहिः & अनेकमन्यपदार्थे",
+    "samasa_type": "बहुव्रीहिः (Master Trigger - Anyapadartha)",
+    "priority": 95,
+    "purva": { "match_type": "subanta" },
+    "uttara": { "match_type": "subanta" },
+    "match_logic": {
+      "word_count": ">= 2",
+      "case_match_required": true,
+      "developer_note": "Words must usually be in apposition (Samanadhikarana)."
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "anyapadarthaModal",
+      "question_sa": "किम् एतानि पदानि स्वार्थं परित्यज्य अन्यं बाह्यं पदार्थं (व्यक्तिं/वस्तुं) सूचयन्ति?",
+      "question_en": "Do these words collectively point to an external entity not present in the words themselves?",
+      "if_false_msg": "अन्यपदार्थाभावे बहुव्रीहिः न भवति (उदा: वृष्टे देवे गतः)।"
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "inherit_external_gender": true
+    }
+  },
+  {
+    "rule_id": "Vartika_Bahuvrihi_Lopa_1",
+    "sutra": "सप्तम्युपमानपूर्वपदस्योत्तरपदलोपश्च & समुदायविकारषष्ठ्याश्च",
+    "samasa_type": "बहुव्रीहिः (मध्यपद-लोपः / Middle-Node Deletion)",
+    "priority": 90,
+    "parent_dependency": "2.2.23_24",
+    "purva": { "match_type": "condition", "conditions": ["Saptamyanta", "Upamana", "Sanghata", "Vikara"] },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "delete_middle_node": true,
+      "developer_note": "Deletes intermediate functional words like sthita, iva, sanghata, or vikara."
+    }
+  },
+  {
+    "rule_id": "Vartika_Bahuvrihi_Lopa_2",
+    "sutra": "प्रादिभ्यो धातुजस्य वा & नञोऽस्त्यर्थानां वा",
+    "samasa_type": "बहुव्रीहिः (विकल्प-लोपः / Optional Deletion)",
+    "priority": 90,
+    "parent_dependency": "2.2.23_24",
+    "purva": { "match_type": "exact_pratipadika", "words": ["प्र", "नञ्"] },
+    "uttara": { "match_type": "condition", "conditions": ["Dhatuja", "Asthyartha"] },
+    "semantic_check": { "required": false },
+    "action": {
+      "execute_samasa": true,
+      "is_lopa_optional": true
+    }
+  },
+  {
+    "rule_id": "Vartika_Bahuvrihi_Misc",
+    "sutra": "अव्ययानां च & अस्तिक्षीरादिवचनम्",
+    "samasa_type": "बहुव्रीहिः (अव्यय-बहुव्रीहिः)",
+    "priority": 90,
+    "parent_dependency": "2.2.23_24",
+    "purva": { "match_type": "type_check", "types": ["Avyaya", "अस्ति (verb as particle)"] },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true }
+  },
+  {
+    "rule_id": "2.2.25",
+    "sutra": "सङ्ख्ययाऽव्ययासन्नादूराधिकसंख्याः सङ्ख्येये",
+    "samasa_type": "बहुव्रीहिः (सङ्ख्या-बहुव्रीहिः)",
+    "priority": 85,
+    "purva": { "match_type": "gana_list_or_type", "words": ["आसन्न", "अदूर", "अधिक"], "types": ["Avyaya", "Numeral"] },
+    "uttara": { "match_type": "type_check", "type": "Numeral" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "sankhyeyaModal",
+      "question_en": "Does the compound denote an approximate or combined numerical value (sankhyeya)?",
+      "if_false_msg": "सङ्ख्येयाभावे समासो न भवति (उदा: पञ्च ब्राह्मणाः)।"
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true, "force_bahuvrihi_meaning": true }
+  },
+  {
+    "rule_id": "2.2.26",
+    "sutra": "दिङ्नामान्यन्तराले",
+    "samasa_type": "बहुव्रीहिः (दिग्-बहुव्रीहिः)",
+    "priority": 85,
+    "purva": { "match_type": "category", "category": "Compass_Direction" },
+    "uttara": { "match_type": "category", "category": "Compass_Direction" },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "dikAntaralaModal",
+      "question_en": "Does the compound signify the intermediate point between two directions?",
+      "if_false_msg": "अन्तरालाभावे समासो न भवति।"
+    },
+    "action": { "execute_samasa": true, "drop_vibhakti": true }
+  },
+  {
+    "rule_id": "2.2.28",
+    "sutra": "तेन सहेति तुल्ययोगे",
+    "samasa_type": "बहुव्रीहिः (सहित-बहुव्रीहिः)",
+    "priority": 90,
+    "purva": { "exact_word": "सह" },
+    "uttara": { "match_type": "vibhakti_check", "vibhakti": 3 },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "tulyaYogaModal",
+      "question_en": "Is there an equal participation in the action (tulya-yoga)?",
+      "if_false_msg": "तुल्ययोगाभावे अयं समासो न भवति।"
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "replace_word": { "target": "सह", "replacement": "स", "source_rule": "6.3.82" }
+    }
+  },
+  {
+    "rule_id": "2.2.29",
+    "sutra": "चार्थे द्वन्द्वः",
+    "samasa_type": "द्वन्द्व समास (Master Trigger)",
+    "priority": 90,
+    "purva": { "match_type": "subanta" },
+    "uttara": { "match_type": "subanta" },
+    "match_logic": {
+      "word_count": ">= 2",
+      "particle_required": "च",
+      "semantic_modes": ["इतरेतरयोग", "समाहार"],
+      "blocked_modes": ["समुच्चय", "अन्वाचय"]
+    },
+    "semantic_check": {
+      "required": true,
+      "modal_id": "dvandvaChaModal",
+      "question_sa": "किं पदानि परस्परं चकारेण सम्बद्धानि (इतरेतरयोगः वा समाहारः वा)?",
+      "question_en": "Are the words connected by 'cha' in mutual conjunction (itaretarayoga) or aggregate (samahara)?",
+      "if_false_msg": "समुच्चयान्वाचयोर्नो समासो न भवति (उदा: ईश्वरं गुरुं च भजस्व) — असामर्थ्यात्।"
+    },
+    "action": {
+      "execute_samasa": true,
+      "drop_vibhakti": true,
+      "apply_dual_plural_ending": true
+    }
+  },
+  {
+    "rule_id": "2.2.30",
+    "sutra": "उपसर्जनं पूर्वम्",
+    "samasa_type": "समास सामान्य नियम (Position Ordering)",
+    "priority": 70,
+    "purva": { "match_type": "type_check", "type": "Upasarjana" },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "force_position_first": true }
+  },
+  {
+    "rule_id": "2.2.31",
+    "sutra": "राजदन्तादिषु परम्",
+    "samasa_type": "द्वन्द्व / तत्पुरुष (राजदन्तादि गण - Irregular Position)",
+    "priority": 95,
+    "purva": { "match_type": "gana_list", "words": ["राजदन्तः", "अग्रेवणम्", "दम्पती", "जायापती", "हरिहरौ", "अद्यन्तौ", "गुणवृद्धी"] },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "reverse_default_position": true }
+  },
+  {
+    "rule_id": "2.2.32",
+    "sutra": "द्वन्द्वे घि",
+    "samasa_type": "द्वन्द्व समास (Sorting Rule - Ghi Sangna)",
+    "priority": 80,
+    "purva": { "match_type": "ghi_sangna" },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "force_position_first": true }
+  },
+  {
+    "rule_id": "2.2.33",
+    "sutra": "अजाद्यदन्तम्",
+    "samasa_type": "द्वन्द्व समास (Sorting Rule - Vowel Start & Short-A End)",
+    "priority": 80,
+    "purva": { "match_type": "condition", "conditions": ["starts_with_vowel", "ends_with_short_a"] },
+    "uttara": { "match_type": "any" },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "force_position_first": true }
+  },
+  {
+    "rule_id": "2.2.34",
+    "sutra": "अल्पाच्तरम्",
+    "samasa_type": "द्वन्द्व समास (Sorting Rule - Vowel Count)",
+    "priority": 75,
+    "purva": { "match_type": "any" },
+    "uttara": { "match_type": "any" },
+    "match_logic": {
+      "sort_by": "vowel_count",
+      "order": "ascending"
+    },
+    "semantic_check": { "required": false },
+    "action": { "execute_samasa": true, "sort_by_vowel_count_ascending": true }
   }
 ]

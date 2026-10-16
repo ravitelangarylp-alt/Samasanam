@@ -50,8 +50,8 @@ var SUP_PRATYAYA = {
   7: ["ङि", "ओस्", "सुप्"]
 };
 
-// Google Apps Script (Gemini backend) endpoint
-var GEMINI_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTA6JWIuzT8dh3S2BTOecQouvwMKFtBDMSUVYx5rqqOdPBfPkymGcy0rI-X_O45BeF/exec";
+// Google Apps Script (Claude backend) endpoint
+var CLAUDE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhfOXVv1g-5rN5Cw3z_SCu69KnseRyUXtUyzAnQe3bjPt5vu5bcc2umYNXDQuU8bC2/exec";
 
 var VIBHAKTI_NAMES_SA = {
   0: "अव्ययम् (Indeclinable)",
@@ -205,7 +205,9 @@ function buildAppInterface() {
     ".samasta-word.fail-text { font-size: 20px; color: var(--danger); }",
     ".prakriya-box { background: #FFF; padding: 16px 20px; border-radius: 8px; border: 1px solid #DCFCE7; margin-bottom: 12px; }",
     ".prakriya-box h4 { margin-bottom: 10px; color: #166534; font-size: 16px; }",
-    ".prakriya-steps { padding-left: 20px; }",
+    ".prakriya-steps { padding-left: 20px; white-space: pre-wrap; line-height: 1.6; font-family: monospace, sans-serif; }",
+    ".lang-toggle-btn { background: #57534E; color: #FFF; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; margin-bottom: 10px; }",
+    ".lang-toggle-btn:hover { background: #292524; }",
     ".prakriya-steps li { margin-bottom: 8px; font-size: 15px; }",
     ".sutra-highlight { background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 4px; font-weight: 700; }",
     ".audit-log { background: #FFF; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }",
@@ -299,7 +301,7 @@ function buildAppInterface() {
       alert("कृपया पूर्वपदम् उत्तरपदं च लिखत (Please enter both First Word and Second Word).");
       return;
     }
-    callGeminiBackend("Combine", {
+    callClaudeBackend("Combine", {
       words: purvaInput + " + " + uttaraInput,
       purva: purvaInput,
       uttara: uttaraInput,
@@ -344,7 +346,7 @@ function buildAppInterface() {
       alert("कृपया समस्तपदं लिखत (Please enter a compound word to split).");
       return;
     }
-    callGeminiBackend("Split", {
+    callClaudeBackend("Split", {
       word: samastaWord,
       vivaksha: vivakshaInput
     });
@@ -780,19 +782,46 @@ function showLoadingIndicator(actionLabel) {
   hero.appendChild(el("div", "vigraha-part", "कृपया प्रतीक्षताम्... (Please wait — thinking...)"));
   card.appendChild(hero);
 
-  card.appendChild(el("p", "", "गूगल-जिमिनि-समान्धिम् अनुवर्तनं क्रियते / Google Gemini API is processing your request..."));
+  card.appendChild(el("p", "", "गूगल-जिमिनि-समान्धिम् अनुवर्तनं क्रियते / Google Claude API is processing your request..."));
   resBox.appendChild(card);
   resBox.scrollIntoView({ behavior: "smooth" });
 }
 
-function renderGeminiResult(action, payload, textResponse) {
+function renderClaudeResult(action, payload, textResponse) {
   var resBox = document.getElementById("resultSection");
   resBox.innerHTML = "";
   resBox.style.display = "block";
 
+  // Parse Sanskrit and English tags
+  function getTagContent(text, tag) {
+    var regex = new RegExp("<" + tag + ">([\\s\\S]*?)</" + tag + ">");
+    var match = text.match(regex);
+    return match ? match[1].trim() : "";
+  }
+
+  var sanskritContent = getTagContent(textResponse, "sanskrit");
+  var englishContent = getTagContent(textResponse, "english");
+
+  // Fallback if no tags
+  if (!sanskritContent) sanskritContent = textResponse;
+
   var card = el("div", "result-card success");
   var hdr = el("div", "result-header");
   hdr.appendChild(el("span", "badge-success", "✓ " + (action === "Combine" ? "समास-सिद्धिः (Valid Samāsa)" : "विग्रह-विश्लेषणम् (Vigraha Analysis)")));
+  
+  // Language Toggle Button
+  if (englishContent) {
+    var toggleBtn = el("button", "lang-toggle-btn", "Switch to English");
+    var isSanskrit = true;
+    toggleBtn.onclick = function() {
+      isSanskrit = !isSanskrit;
+      var contentArea = document.getElementById("prakriyaContent");
+      contentArea.textContent = isSanskrit ? sanskritContent : englishContent;
+      toggleBtn.textContent = isSanskrit ? "Switch to English" : "संस्कृते पश्यन्तु (View in Sanskrit)";
+    };
+    hdr.appendChild(toggleBtn);
+  }
+  
   card.appendChild(hdr);
 
   var hero = el("div", "samasta-hero");
@@ -801,28 +830,24 @@ function renderGeminiResult(action, payload, textResponse) {
     : payload.word;
   hero.appendChild(el("div", "vigraha-part", "Input: " + inputLabel));
   hero.appendChild(el("div", "arrow", "➔"));
-  hero.appendChild(el("div", "samasta-word", "जिमिनि-उत्तरम् (Gemini Response)"));
+  hero.appendChild(el("div", "samasta-word", "समास-प्रक्रिया (Samāsa Prakriyā)"));
   card.appendChild(hero);
 
   var pBox = el("div", "prakriya-box");
-  pBox.appendChild(el("h4", "", "📜 " + (action === "Combine" ? "समास-निर्माण-फलम् (Compound Result)" : "विग्रह-फलम् (Decompound Result)")));
+  pBox.appendChild(el("h4", "", "📜 प्रक्रिया-सोपानानि (Derivation Steps):"));
 
-  // Render Gemini text with basic line breaks preserved
-  var lines = String(textResponse || "").split(/\r?\n/);
-  var list = el("ol", "prakriya-steps");
-  lines.forEach(function(line) {
-    if (line.trim() === "") return;
-    var li = el("li", "", line.trim());
-    list.appendChild(li);
-  });
-  pBox.appendChild(list);
+  // Inject content
+  var contentArea = el("pre", "prakriya-steps");
+  contentArea.id = "prakriyaContent";
+  contentArea.textContent = sanskritContent;
+  pBox.appendChild(contentArea);
+  
   card.appendChild(pBox);
-
   resBox.appendChild(card);
   resBox.scrollIntoView({ behavior: "smooth" });
 }
 
-function renderGeminiError(action, errMsg) {
+function renderClaudeError(action, errMsg) {
   var resBox = document.getElementById("resultSection");
   resBox.innerHTML = "";
   resBox.style.display = "block";
@@ -832,40 +857,37 @@ function renderGeminiError(action, errMsg) {
   hdr.appendChild(el("span", "badge-fail", "✗ त्रुटिः (Error)"));
   card.appendChild(hdr);
 
-  card.appendChild(el("p", "", "जिमिनि-सम्बन्धं असफलम् अवा अनुपलभ्यम् — Gemini request failed or unavailable. " + errMsg));
+  card.appendChild(el("p", "", "जिमिनि-सम्बन्धं असफलम् अवा अनुपलभ्यम् — Claude request failed or unavailable. " + errMsg));
   resBox.appendChild(card);
   resBox.scrollIntoView({ behavior: "smooth" });
 }
 
-function callGeminiBackend(action, payload) {
+function callClaudeBackend(action, payload) {
   showLoadingIndicator(action === "Combine" ? "संयोजनं क्रियते (Combining...)" : "विग्रहः क्रियते (Splitting...)");
 
-  fetch(GEMINI_SCRIPT_URL, {
+  fetch(CLAUDE_SCRIPT_URL, {
     method: "POST",
-    headers: { "Content-Type": "text/plain" },
+    redirect: "follow",
     body: JSON.stringify({ action: action, payload: payload })
   })
   .then(function(response) {
-    return response.text().then(function(text) {
-      try {
-        var data = JSON.parse(text);
-        if (data && data.result) {
-          renderGeminiResult(action, payload, data.result);
-        } else if (data && data.error) {
-          renderGeminiError(action, data.error);
-        } else {
-          renderGeminiResult(action, payload, text || "No response text.");
-        }
-      } catch (e) {
-        renderGeminiResult(action, payload, text || "No response text.");
-      }
-    }).catch(function() {
-      renderGeminiResult(action, payload, "Request sent to backend. Check the GAS logs for the Gemini result.");
-    });
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status + ": " + response.statusText);
+    }
+    return response.json();
+  })
+  .then(function(data) {
+    if (data && data.result) {
+      renderClaudeResult(action, payload, data.result);
+    } else if (data && data.error) {
+      renderClaudeError(action, data.error);
+    } else {
+      renderClaudeResult(action, payload, JSON.stringify(data) || "No response text.");
+    }
   })
   .catch(function(err) {
-    console.error("Gemini backend fetch error:", err);
-    renderGeminiError(action, String(err && err.message ? err.message : err));
+    console.error("Claude backend fetch error:", err);
+    renderClaudeError(action, String(err && err.message ? err.message : err));
   });
 }
 
@@ -1403,10 +1425,11 @@ function loadFallbackData() {
     { rule_id: "2.1.30_35", sutra: "तृतीया तत्कृतार्थेन गुणवचनेन (2.1.30) / कर्तृकरणे कृता बहुलम् (2.1.32) / अन्नेन व्यञ्जनम् (2.1.34)", samasa_type: "तृतीया-तत्पुरुषः (Instrumental Tatpurusha)", purva: { vibhakti: 3 }, uttara: { match_type: "semantic_dependent" }, semantic_check: { required: true, question_sa: "तृतीया-तत्पुरुषे कः अर्थसम्बन्धः विवक्षितः?", question_en: "Select the intended semantic relationship:", options: [ { key: "guna", sutra: "2.1.30 (तृतीया तत्कृतार्थेन गुणवचनेन)", label: "तत्कृत-गुणवचनम् — Quality produced by the Purvapada" }, { key: "kridanta", sutra: "2.1.32 (कर्तृकरणे कृता बहुलम्)", label: "कर्तृ-करणे कृदन्तः — Agent or Instrument with Kridanta" }, { key: "kritya", sutra: "2.1.33 (कृत्यैरधिकार्थवचने)", label: "कृत्यप्रत्ययान्तः अतिशयोक्तौ — Exaggerated praise or blame" }, { key: "anna", sutra: "2.1.34-35 (अन्नेन व्यञ्जनम् / भक्ष्येण मिश्रीकरणम्)", label: "अन्न-व्यञ्जन-मिश्रीकरणम् — Food & condiment combination" } ], if_false_msg: "तृतीया-समासस्य योग्यः अर्थसम्बन्धः नास्ति।" } },
     { rule_id: "2.1.36", sutra: "चतुर्थी तदर्थार्थबलिहितसुखरक्षितैः", samasa_type: "चतुर्थी-तत्पुरुषः (Dative Tatpurusha)", purva: { vibhakti: 4 }, uttara: { match_type: "exact_or_semantic", exact_words: ["अर्थ", "बलि", "हित", "सुख", "रक्षित"] }, semantic_check: { required_if_not_exact: true, question_sa: "किमत्र प्रकृति-विकृति-भावः विद्यते?", question_en: "Is there a material-to-product transformation (Prakriti-Vikriti-Bhava)?", if_false_msg: "प्रकृति-विकृति-भावाभावे चतुर्थी-समासो न भवति (यथा—रन्धनाय स्थाली)।" } },
     { rule_id: "2.1.37", sutra: "पञ्चमी भयेन", samasa_type: "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)", purva: { vibhakti: 5 }, uttara: { match_type: "exact_pratipadika", words: ["भय", "भीत", "भीति", "भी"] }, semantic_check: { required: false } },
-    { rule_id: "2.1.38", sutra: "अपेतापोढमुक्तपतितापत्रस्तैरल्पशः", samasa_type: "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)", purva: { vibhakti: 5 }, uttara: { match_type: "exact_pratipadika", words: ["अपेत", "अपोढ", "मुक्त", "पतित", "अपत्रस्त"] }, semantic_check: { required: false } },
-    { rule_id: "2.1.39", sutra: "स्तोकान्तिकदूरार्थकृच्छ्राणि क्तेन", samasa_type: "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)", purva: { vibhakti: 5, allowed_stems: ["स्तोक", "अन्तिक", "दूर", "कृच्छ्र", "अल्प", "निकट"] }, uttara: { match_type: "kta_anta" }, semantic_check: { required: false } },
+    { rule_id: "2.1.38", sutra: "अपेतापोढमुक्तपतितापत्रस्तैरल्पशः", samasa_type: "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)", priority: 70, purva: { vibhakti: 5 }, uttara: { match_type: "exact_pratipadika", words: ["अपेत", "अपोढ", "मुक्त", "पतित", "अपत्रस्त"] }, semantic_check: { required: true, modal_id: "alpashaModal", question_sa: "किमत्र अल्पशः (क्रमशः/मन्दम्) विवक्षा वर्तते?", question_en: "Is the action gradual or slight (alpasha)?", if_false_msg: "अल्पशः इत्यस्य अभावे समासो न भवति (उदा: प्रासादात् पतितः) — Without gradual action, compounding is prohibited." }, action: { execute_samasa: true, drop_vibhakti: true } },
+    { rule_id: "2.1.39", sutra: "स्तोकान्तिकदूरार्थकृच्छ्राणि क्तेन", samasa_type: "पञ्चमी-तत्पुरुषः (Ablative Tatpurusha)", priority: 85, purva: { vibhakti: 5, allowed_stems: ["स्तोक", "अन्तिक", "दूर", "कृच्छ्र", "अल्प", "निकट"] }, uttara: { match_type: "kta_anta" }, semantic_check: { required: false }, action: { execute_samasa: true, drop_vibhakti: false, external_rule_trigger: "6.3.2 (पञ्चम्याः स्तोकादिभ्यः)" } },
     { rule_id: "2.2.8", sutra: "षष्ठी", samasa_type: "षष्ठी-तत्पुरुषः (Genitive Tatpurusha)", purva: { vibhakti: 6 }, uttara: { match_type: "shashthi_general" }, semantic_check: { required: false, question_sa: "षष्ठी-समास-निषेध-परीक्षा (2.2.10 - 2.2.16)", question_en: "Verify whether this Genitive relation is permitted or prohibited:", options: [ { key: "valid", sutra: "2.2.8 (षष्ठी)", label: "सामान्य-षष्ठी-सम्बन्धः — Valid Genitive relationship (Compounding permitted)" }, { key: "nishedha", sutra: "2.2.10 (न निर्धारणे)", label: "निर्धारण-षष्ठी-निषेधः — Prohibited when singling out from a group (e.g., नृणां श्रेष्ठः)", is_nishedha: true } ] } },
-    { rule_id: "2.1.40_41", sutra: "सप्तमी शौण्डैः (2.1.40) / सिद्धशुष्कपक्वबन्धैश्च (2.1.41)", samasa_type: "सप्तमी-तत्पुरुषः (Locative Tatpurusha)", purva: { vibhakti: 7 }, uttara: { match_type: "exact_pratipadika", words: ["शौण्ड", "धूर्त", "कितव", "व्याड", "प्रवीण", "संवीत", "अन्तर", "अधि", "पटु", "पण्डित", "कुशल", "चपल", "निपुण", "सिद्ध", "शुष्क", "पक्व", "बन्ध"] }, semantic_check: { required: false } }
+    { rule_id: "2.1.40", sutra: "सप्तमी शौण्डैः", samasa_type: "सप्तमी-तत्पुरुषः (Locative Tatpurusha)", priority: 70, purva: { vibhakti: 7 }, uttara: { match_type: "gana_list", words: ["शौण्ड", "धूर्त", "कितव", "व्याड", "प्रवीण", "संवीत", "अन्तर्", "अधि", "पटु", "अधिपटु", "पण्डित", "कुशल", "चपल", "निपुण", "संव्याड", "मन्य", "समीर"] }, semantic_check: { required: false }, action: { execute_samasa: true, drop_vibhakti: true } },
+    { rule_id: "2.1.41", sutra: "सिद्धशुष्कपक्वबन्धैश्च", samasa_type: "सप्तमी-तत्पुरुषः (Locative Tatpurusha)", priority: 70, purva: { vibhakti: 7 }, uttara: { match_type: "exact_pratipadika", words: ["सिद्ध", "शुष्क", "पक्व", "बन्ध"] }, semantic_check: { required: false }, action: { execute_samasa: true, drop_vibhakti: true } },
   ];
 }
 
@@ -1589,7 +1612,7 @@ function submitSuggestWord() {
     generatedForms = newFormsArray.join(";");
   }
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTA6JWIuzT8dh3S2BTOecQouvwMKFtBDMSUVYx5rqqOdPBfPkymGcy0rI-X_O45BeF/exec";
+  const SCRIPT_URL = CLAUDE_SCRIPT_URL;
 
   var payload = {
     pratipadika: wordValue,
