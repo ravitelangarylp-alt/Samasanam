@@ -792,37 +792,28 @@ function renderClaudeResult(action, payload, textResponse) {
   resBox.innerHTML = "";
   resBox.style.display = "block";
 
-  // Parse Sanskrit and English tags
-  function getTagContent(text, tag) {
-    var regex = new RegExp("<" + tag + ">([\\s\\S]*?)</" + tag + ">");
-    var match = text.match(regex);
-    return match ? match[1].trim() : "";
-  }
-
-  var sanskritContent = getTagContent(textResponse, "sanskrit");
-  var englishContent = getTagContent(textResponse, "english");
-
-  // Fallback if no tags
-  if (!sanskritContent) sanskritContent = textResponse;
+  var sanskritMatch = textResponse.match(/<sanskrit>([\s\S]*?)<\/sanskrit>/);
+  var englishMatch = textResponse.match(/<english>([\s\S]*?)<\/english>/);
+  
+  var sanskritText = sanskritMatch ? sanskritMatch[1].trim() : textResponse;
+  var englishText = englishMatch ? englishMatch[1].trim() : "English translation not available.";
 
   var card = el("div", "result-card success");
   var hdr = el("div", "result-header");
   hdr.appendChild(el("span", "badge-success", "✓ " + (action === "Combine" ? "समास-सिद्धिः (Valid Samāsa)" : "विग्रह-विश्लेषणम् (Vigraha Analysis)")));
-  
-  // Language Toggle Button
-  if (englishContent) {
-    var toggleBtn = el("button", "lang-toggle-btn", "Switch to English");
-    var isSanskrit = true;
-    toggleBtn.onclick = function() {
-      isSanskrit = !isSanskrit;
-      var contentArea = document.getElementById("prakriyaContent");
-      contentArea.textContent = isSanskrit ? sanskritContent : englishContent;
-      toggleBtn.textContent = isSanskrit ? "Switch to English" : "संस्कृते पश्यन्तु (View in Sanskrit)";
-    };
-    hdr.appendChild(toggleBtn);
-  }
-  
   card.appendChild(hdr);
+
+  // Toggle Button
+  var toggleBtn = el("button", "lang-toggle-btn", "English");
+  toggleBtn.id = "langToggle";
+  var isSanskrit = true;
+  toggleBtn.onclick = function() {
+    isSanskrit = !isSanskrit;
+    var contentArea = document.getElementById("prakriyaContent");
+    contentArea.innerText = isSanskrit ? sanskritText : englishText;
+    toggleBtn.innerText = isSanskrit ? "English" : "संस्कृतम्";
+  };
+  card.appendChild(toggleBtn);
 
   var hero = el("div", "samasta-hero");
   var inputLabel = action === "Combine"
@@ -834,12 +825,9 @@ function renderClaudeResult(action, payload, textResponse) {
   card.appendChild(hero);
 
   var pBox = el("div", "prakriya-box");
-  pBox.appendChild(el("h4", "", "📜 प्रक्रिया-सोपानानि (Derivation Steps):"));
-
-  // Inject content
   var contentArea = el("pre", "prakriya-steps");
   contentArea.id = "prakriyaContent";
-  contentArea.textContent = sanskritContent;
+  contentArea.innerText = sanskritText;
   pBox.appendChild(contentArea);
   
   card.appendChild(pBox);
