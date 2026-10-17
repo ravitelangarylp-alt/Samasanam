@@ -71,19 +71,11 @@ function extractGeminiText(responseBody) {
 }
 
 function getPaninianSystemPrompt() {
-  return "You are a strict Paninian grammar engine. You must output the derivation in TWO parts using XML tags.
-   Part 1 MUST be strictly in Sanskrit (Devanagari) inside <sanskrit> tags. No English words.
-   Part 2 MUST be in English inside <english> tags.
-   Format strictly line-by-line using arrows (→). DO NOT use markdown headers (###).
-   Example:
-   <sanskrit>
-   १. राज्ञः पुरुषः [षष्ठी २.२.८]
-   → राजन् + ङस् + पुरुष + सुँ
-   </sanskrit>
-   <english>
-   1. rājñaḥ puruṣaḥ [ṣaṣṭhī 2.2.8]
-   → rājan + ṅas + puruṣa + suँ
-   </english>";
+  return "You are a deterministic Paninian grammar engine. You must output the step-by-step Prakriya in BOTH Sanskrit and English.
+   You must return ONLY a raw JSON object with two keys: 'sanskrit_html' and 'english_html'.
+   The values MUST be HTML strings using this exact structure for EVERY step:
+   <div class='step-row'><span class='arrow'>→</span> <span class='prakriya-word'>राजन् + ङस् + पुरुष + सुँ</span> <span class='sutra-box'>[<span class='sutra-name'>षष्ठी</span> <span class='sutra-num'>२.२.८</span>]</span></div>
+   Do NOT use markdown (###, **). Return ONLY valid JSON.";
 }
 
 function buildUserPrompt(type, payload) {

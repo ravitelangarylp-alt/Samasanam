@@ -205,7 +205,13 @@ function buildAppInterface() {
     ".samasta-word.fail-text { font-size: 20px; color: var(--danger); }",
     ".prakriya-box { background: #FFF; padding: 16px 20px; border-radius: 8px; border: 1px solid #DCFCE7; margin-bottom: 12px; }",
     ".prakriya-box h4 { margin-bottom: 10px; color: #166534; font-size: 16px; }",
-    ".prakriya-steps { padding-left: 20px; white-space: pre-wrap; line-height: 1.6; font-family: monospace, sans-serif; }",
+    ".prakriya-container { font-family: monospace, sans-serif; line-height: 1.8; font-size: 16px; }",
+    ".step-row { margin-bottom: 8px; }",
+    ".arrow { color: #555; font-weight: bold; }",
+    ".prakriya-word { color: #d32f2f; font-weight: bold; }",
+    ".sutra-box { color: #1976d2; }",
+    ".sutra-name { color: #1976d2; font-weight: bold; }",
+    ".sutra-num { color: #388e3c; font-weight: bold; }",
     ".lang-toggle-btn { background: #57534E; color: #FFF; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; margin-bottom: 10px; }",
     ".lang-toggle-btn:hover { background: #292524; }",
     ".prakriya-steps li { margin-bottom: 8px; font-size: 15px; }",
@@ -792,28 +798,29 @@ function renderClaudeResult(action, payload, textResponse) {
   resBox.innerHTML = "";
   resBox.style.display = "block";
 
-  var sanskritMatch = textResponse.match(/<sanskrit>([\s\S]*?)<\/sanskrit>/);
-  var englishMatch = textResponse.match(/<english>([\s\S]*?)<\/english>/);
-  
-  var sanskritText = sanskritMatch ? sanskritMatch[1].trim() : textResponse;
-  var englishText = englishMatch ? englishMatch[1].trim() : "English translation not available.";
+  var parsedData;
+  try {
+    parsedData = JSON.parse(textResponse.replace(/```json\n?|\n?```/g, ''));
+  } catch (e) {
+    renderClaudeError(action, "Failed to parse JSON response: " + e.message);
+    return;
+  }
 
   var card = el("div", "result-card success");
   var hdr = el("div", "result-header");
   hdr.appendChild(el("span", "badge-success", "✓ " + (action === "Combine" ? "समास-सिद्धिः (Valid Samāsa)" : "विग्रह-विश्लेषणम् (Vigraha Analysis)")));
-  card.appendChild(hdr);
-
-  // Toggle Button
-  var toggleBtn = el("button", "lang-toggle-btn", "English");
+  
+  var toggleBtn = el("button", "lang-toggle-btn", "Switch to English");
   toggleBtn.id = "langToggle";
   var isSanskrit = true;
   toggleBtn.onclick = function() {
     isSanskrit = !isSanskrit;
     var contentArea = document.getElementById("prakriyaContent");
-    contentArea.innerText = isSanskrit ? sanskritText : englishText;
-    toggleBtn.innerText = isSanskrit ? "English" : "संस्कृतम्";
+    contentArea.innerHTML = isSanskrit ? parsedData.sanskrit_html : parsedData.english_html;
+    toggleBtn.innerText = isSanskrit ? "Switch to English" : "संस्कृते पश्यन्तु (View in Sanskrit)";
   };
-  card.appendChild(toggleBtn);
+  hdr.appendChild(toggleBtn);
+  card.appendChild(hdr);
 
   var hero = el("div", "samasta-hero");
   var inputLabel = action === "Combine"
@@ -825,9 +832,11 @@ function renderClaudeResult(action, payload, textResponse) {
   card.appendChild(hero);
 
   var pBox = el("div", "prakriya-box");
-  var contentArea = el("pre", "prakriya-steps");
+  pBox.appendChild(el("h4", "", "📜 प्रक्रिया-सोपानानि (Derivation Steps):"));
+
+  var contentArea = el("div", "prakriya-container");
   contentArea.id = "prakriyaContent";
-  contentArea.innerText = sanskritText;
+  contentArea.innerHTML = parsedData.sanskrit_html;
   pBox.appendChild(contentArea);
   
   card.appendChild(pBox);
