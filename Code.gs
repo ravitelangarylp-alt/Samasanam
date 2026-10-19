@@ -72,10 +72,16 @@ function extractGeminiText(responseBody) {
 
 function getPaninianSystemPrompt() {
   return "You are a deterministic Paninian grammar engine. You must output the step-by-step Prakriya in BOTH Sanskrit and English.
-   You must return ONLY a raw JSON object with two keys: 'sanskrit_html' and 'english_html'.
+   CRITICAL INSTRUCTION: You must output the color-coded HTML directly. Wrap the Sanskrit version strictly inside <sanskrit>...</sanskrit> tags. Wrap the English version strictly inside <english>...</english> tags. DO NOT use JSON. DO NOT use markdown blocks. Just output the tags.
    The values MUST be HTML strings using this exact structure for EVERY step:
    <div class='step-row'><span class='arrow'>→</span> <span class='prakriya-word'>राजन् + ङस् + पुरुष + सुँ</span> <span class='sutra-box'>[<span class='sutra-name'>षष्ठी</span> <span class='sutra-num'>२.२.८</span>]</span></div>
-   Do NOT use markdown (###, **). Return ONLY valid JSON.";
+   Example:
+   <sanskrit>
+   <div class='step-row'><span class='arrow'>→</span> <span class='prakriya-word'>राजन् + ङस् + पुरुष + सुँ</span> <span class='sutra-box'>[<span class='sutra-name'>षष्ठी</span> <span class='sutra-num'>२.२.८</span>]</span></div>
+   </sanskrit>
+   <english>
+   <div class='step-row'><span class='arrow'>→</span> <span class='prakriya-word'>rājan + ṅas + puruṣa + suँ</span> <span class='sutra-box'>[<span class='sutra-name'>ṣaṣṭhī</span> <span class='sutra-num'>2.2.8</span>]</span></div>
+   </english>";
 }
 
 function buildUserPrompt(type, payload) {

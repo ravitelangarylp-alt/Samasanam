@@ -206,7 +206,7 @@ function buildAppInterface() {
     ".prakriya-box { background: #FFF; padding: 16px 20px; border-radius: 8px; border: 1px solid #DCFCE7; margin-bottom: 12px; }",
     ".prakriya-box h4 { margin-bottom: 10px; color: #166534; font-size: 16px; }",
     ".prakriya-container { font-family: monospace, sans-serif; line-height: 1.8; font-size: 16px; }",
-    ".step-row { margin-bottom: 8px; }",
+    ".step-row { margin-bottom: 8px; font-family: monospace, sans-serif; font-size: 16px; line-height: 1.6; white-space: pre-wrap; }",
     ".arrow { color: #555; font-weight: bold; }",
     ".prakriya-word { color: #d32f2f; font-weight: bold; }",
     ".sutra-box { color: #1976d2; }",
@@ -798,27 +798,27 @@ function renderClaudeResult(action, payload, textResponse) {
   resBox.innerHTML = "";
   resBox.style.display = "block";
 
-  var parsedData;
-  try {
-    parsedData = JSON.parse(textResponse.replace(/```json\n?|\n?```/g, ''));
-  } catch (e) {
-    renderClaudeError(action, "Failed to parse JSON response: " + e.message);
+  // Step 1: Extract content between tags
+  const sanskritMatch = textResponse.match(/<sanskrit>([\s\S]*?)<\/sanskrit>/i);
+  const englishMatch = textResponse.match(/<english>([\s\S]*?)<\/english>/i);
+
+  if (!sanskritMatch) {
+    console.error("Sanskrit tags not found in response.");
+    renderClaudeError(action, "AI output format is invalid. Tags missing.");
     return;
   }
+
+  // Step 2: Store extracted HTML safely
+  window.sanskritHtml = sanskritMatch[1].trim();
+  window.englishHtml = englishMatch ? englishMatch[1].trim() : "English translation not available.";
 
   var card = el("div", "result-card success");
   var hdr = el("div", "result-header");
   hdr.appendChild(el("span", "badge-success", "✓ " + (action === "Combine" ? "समास-सिद्धिः (Valid Samāsa)" : "विग्रह-विश्लेषणम् (Vigraha Analysis)")));
   
+  // Toggle Button
   var toggleBtn = el("button", "lang-toggle-btn", "Switch to English");
   toggleBtn.id = "langToggle";
-  var isSanskrit = true;
-  toggleBtn.onclick = function() {
-    isSanskrit = !isSanskrit;
-    var contentArea = document.getElementById("prakriyaContent");
-    contentArea.innerHTML = isSanskrit ? parsedData.sanskrit_html : parsedData.english_html;
-    toggleBtn.innerText = isSanskrit ? "Switch to English" : "संस्कृते पश्यन्तु (View in Sanskrit)";
-  };
   hdr.appendChild(toggleBtn);
   card.appendChild(hdr);
 
@@ -834,14 +834,26 @@ function renderClaudeResult(action, payload, textResponse) {
   var pBox = el("div", "prakriya-box");
   pBox.appendChild(el("h4", "", "📜 प्रक्रिया-सोपानानि (Derivation Steps):"));
 
+  // Step 3: Set default UI
   var contentArea = el("div", "prakriya-container");
-  contentArea.id = "prakriyaContent";
-  contentArea.innerHTML = parsedData.sanskrit_html;
+  contentArea.id = "outputDiv";
+  contentArea.innerHTML = window.sanskritHtml;
   pBox.appendChild(contentArea);
   
   card.appendChild(pBox);
   resBox.appendChild(card);
   resBox.scrollIntoView({ behavior: "smooth" });
+
+  // Step 4: Language Toggle Logic
+  toggleBtn.onclick = function() {
+    if (contentArea.innerHTML === window.sanskritHtml) {
+        contentArea.innerHTML = window.englishHtml;
+        toggleBtn.innerText = "संस्कृते पश्यन्तु";
+    } else {
+        contentArea.innerHTML = window.sanskritHtml;
+        toggleBtn.innerText = "Switch to English";
+    }
+  };
 }
 
 function renderClaudeError(action, errMsg) {
@@ -987,6 +999,9 @@ function evaluateRuleOnPair(rule, pAna, uAna) {
     return { isMatch: false };
   }
 
+  // Safe navigation using explicit checks to prevent TypeError
+  if (!rule || !rule.purva) return { isMatch: false };
+
   if (rule.purva.exact_word) {
     if (pAna.pratipadika !== rule.purva.exact_word && pAna.surface !== rule.purva.exact_word) {
       return { isMatch: false };
@@ -1007,7 +1022,8 @@ function evaluateRuleOnPair(rule, pAna, uAna) {
     return { isMatch: false };
   }
 
-  var uttaraType = rule.uttara.match_type;
+  var uttaraType = rule.uttara && rule.uttara.match_type;
+  if (!uttaraType) return { isMatch: false };
 
   if (uttaraType === "exact_pratipadika") {
     if (rule.uttara.words.indexOf(uAna.pratipadika) !== -1) {
@@ -1056,6 +1072,8 @@ function evaluateRuleOnPair(rule, pAna, uAna) {
 
 function getRejectionReason(rule, pAnalyses, uAna) {
   var pAna = pAnalyses[0];
+  if (!rule || !rule.purva) return "नियमः न प्राप्तः (Rule not found).";
+  
   if (rule.purva.exact_word && pAna.surface !== rule.purva.exact_word) {
     return "पूर्वपदं '" + rule.purva.exact_word + "' इति अपेक्षितम् (Expected Purvapada: '" + rule.purva.exact_word + "').";
   }
